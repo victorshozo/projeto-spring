@@ -12,7 +12,7 @@ apply plugin: 'eclipse'
 apply plugin: 'spring-boot'
 
 springBoot {
-  mainClass = "Application"
+  mainClass = "com.graincare.Application"
 }
   
 jar {

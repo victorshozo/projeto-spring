@@ -1,11 +1,11 @@
-package main;
+package com.graincare.beacon;
 
 public class Beacon {
 	private Integer beaconID;
 	private Integer beaconBattery;
 	private long beaconTemperature;
 	private long beaconDistance;
-	private Integer siloID;
+	private long siloID;
 
 	public Beacon(Integer beaconID, Integer beaconBattery, long beaconTemperature, Integer siloID, long beaconDistance) {
 		this.beaconID = beaconID;
@@ -31,7 +31,7 @@ public class Beacon {
 		return beaconDistance;
 	}
 
-	public Integer getSiloID() {
+	public long getSiloID() {
 		return siloID;
 	}
 
@@ -39,7 +39,7 @@ public class Beacon {
 		this.beaconDistance = beaconDistance;
 	}
 
-	public void setSiloID(Integer siloID) {
+	public void setSiloID(long siloID) {
 		this.siloID = siloID;
 	}
 

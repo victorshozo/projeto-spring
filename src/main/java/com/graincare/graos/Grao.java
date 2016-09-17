@@ -1,4 +1,4 @@
-package main;
+package com.graincare.graos;
 
 public class Grao {
 

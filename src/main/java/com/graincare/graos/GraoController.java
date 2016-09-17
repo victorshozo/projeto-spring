@@ -1,4 +1,4 @@
-package main;
+package com.graincare.graos;
 
 import java.util.ArrayList;
 
@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class GraoController {
 
-	@RequestMapping("/grao")
+	@RequestMapping("/graos")
 	public ArrayList<Grao> grao() {
 		return getGraos();
 	}

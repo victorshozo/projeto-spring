@@ -1,4 +1,4 @@
-package main;
+package com.graincare.silos;
 
 public class Silo {
 
