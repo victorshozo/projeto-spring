@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /Application.class
 /Beacon.class
 /BeaconController.class
@@ -6,3 +7,11 @@
 /Silo.class
 /SiloController.class
 /com/
+=======
+/main/
+bin
+.settings
+.gradle
+.classpath
+.project
+>>>>>>> bf122af322a7dd9756e39454e762aba5d18553eb

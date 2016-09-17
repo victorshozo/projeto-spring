@@ -1,5 +1,9 @@
 #
+<<<<<<< HEAD
 #Fri Sep 16 22:29:04 BRT 2016
+=======
+#Fri Sep 09 20:22:38 BRT 2016
+>>>>>>> bf122af322a7dd9756e39454e762aba5d18553eb
 org.eclipse.jdt.core.compiler.debug.localVariable=generate
 org.eclipse.jdt.core.compiler.compliance=1.8
 org.eclipse.jdt.core.compiler.codegen.unusedLocal=preserve

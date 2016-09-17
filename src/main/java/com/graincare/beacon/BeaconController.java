@@ -1,4 +1,9 @@
+<<<<<<< HEAD:src/main/java/com/graincare/beacon/BeaconController.java
 package com.graincare.beacon;
+=======
+
+package main;
+>>>>>>> bf122af322a7dd9756e39454e762aba5d18553eb:src/main/BeaconController.java
 
 import java.util.ArrayList;
 import org.springframework.web.bind.annotation.RequestMapping;
