@@ -1,57 +1,57 @@
 package com.graincare.beacon;
 
+
 public class Beacon {
 	private Integer beaconID;
-	private Integer beaconBattery;
 	private long beaconTemperature;
 	private long beaconDistance;
-	private long siloID;
+	private Integer siloID;
+	private long beaconHumidity;
 
-	public Beacon(Integer beaconID, Integer beaconBattery, long beaconTemperature, Integer siloID, long beaconDistance) {
-		this.beaconID = beaconID;
-		this.beaconBattery = beaconBattery;
-		this.beaconTemperature = beaconTemperature;
-		this.siloID = siloID;
-		this.beaconDistance = beaconDistance;
+	public Beacon(Integer beaconID, Integer siloID, long beaconTemperature, long beaconHumidity, long beaconDistance) {
+		this.setBeaconID(beaconID);
+		this.setSiloID(siloID);
+		this.setBeaconTemperature(beaconTemperature);
+		this.setBeaconHumidity(beaconHumidity);
+		this.setBeaconDistance(beaconDistance);
 	}
 
 	public Integer getBeaconID() {
 		return beaconID;
 	}
 
-	public Integer getBeaconBattery() {
-		return beaconBattery;
+	public void setBeaconID(Integer beaconID) {
+		this.beaconID = beaconID;
 	}
-
 	public long getBeaconTemperature() {
 		return beaconTemperature;
+	}
+
+	public void setBeaconTemperature(long beaconTemperature) {
+		this.beaconTemperature = beaconTemperature;
 	}
 
 	public long getBeaconDistance() {
 		return beaconDistance;
 	}
 
-	public long getSiloID() {
-		return siloID;
-	}
-
 	public void setBeaconDistance(long beaconDistance) {
 		this.beaconDistance = beaconDistance;
 	}
 
-	public void setSiloID(long siloID) {
+	public Integer getSiloID() {
+		return siloID;
+	}
+
+	public void setSiloID(Integer siloID) {
 		this.siloID = siloID;
 	}
 
-	public void setBeaconBattery(Integer beaconBattery) {
-		this.beaconBattery = beaconBattery;
+	public long getBeaconHumidity() {
+		return beaconHumidity;
 	}
 
-	public void setBeaconID(Integer beaconID) {
-		this.beaconID = beaconID;
-	}
-
-	public void setBeaconTemperature(long beaconTemperature) {
-		this.beaconTemperature = beaconTemperature;
-	}
+	public void setBeaconHumidity(long beaconHumidity) {
+		this.beaconHumidity = beaconHumidity;
+	}	
 }

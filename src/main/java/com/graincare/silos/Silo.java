@@ -2,66 +2,65 @@ package com.graincare.silos;
 
 public class Silo {
 
-	private Integer siloID;
-	private Integer graoID;
+	private long siloID;
+	private long graoID;
 	private Double siloCapacity;
-	// MUDAR DATAS PARA DATE
 	private String siloDataClose;
 	private String siloDataOpen;
 	private String siloRegion;
 
-	public Silo(Integer siloID, Integer graoID, Double siloCapacity, String siloDataClose, String siloDataOpen,
+	public Silo(long siloID, long graoID, Double siloCapacity, String siloDataClose, String siloDataOpen,
 			String siloRegion) {
-		this.siloID = siloID;
-		this.graoID = graoID;
-		this.siloCapacity = siloCapacity;
-		this.siloRegion = siloRegion;
-		this.siloDataClose = siloDataClose;
-		this.siloDataOpen = siloDataOpen;
+		this.setSiloID(siloID);
+		this.setGraoID(graoID);
+		this.setSiloCapacity(siloCapacity);
+		this.setSiloRegion(siloRegion);
+		this.setSiloDataClose(siloDataClose);
+		this.setSiloDataOpen(siloDataOpen);
 	}
 
-	public Integer getSiloID() {
+	public long getSiloID() {
 		return siloID;
 	}
 
-	public Integer getGraoID() {
+	public void setSiloID(long siloID) {
+		this.siloID = siloID;
+	}
+
+	public long getGraoID() {
 		return graoID;
 	}
 
-	public String getSiloDataClose() {
-		return siloDataClose;
-	}
-
-	public String getSiloDataOpen() {
-		return siloDataOpen;
+	public void setGraoID(long graoID) {
+		this.graoID = graoID;
 	}
 
 	public Double getSiloCapacity() {
 		return siloCapacity;
 	}
 
+	public void setSiloCapacity(Double siloCapacity) {
+		this.siloCapacity = siloCapacity;
+	}
+
 	public String getSiloRegion() {
 		return siloRegion;
-	}
-
-	public void setSiloID(Integer siloID) {
-		this.siloID = siloID;
-	}
-
-	public void setGraoID(Integer graoID) {
-		this.graoID = graoID;
 	}
 
 	public void setSiloRegion(String siloRegion) {
 		this.siloRegion = siloRegion;
 	}
 
-	public void setSiloCapacity(Double siloCapacity) {
-		this.siloCapacity = siloCapacity;
+	public String getSiloDataClose() {
+		return siloDataClose;
 	}
 
 	public void setSiloDataClose(String siloDataClose) {
 		this.siloDataClose = siloDataClose;
+	}
+
+	public String getSiloDataOpen() {
+		return siloDataOpen;
 	}
 
 	public void setSiloDataOpen(String siloDataOpen) {
