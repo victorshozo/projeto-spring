@@ -1,6 +1,7 @@
 package com.graincare.silos;
 
 import java.util.Calendar;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,7 +20,7 @@ public class Silo {
 	@GeneratedValue
 	private Long id;
 	@OneToMany(fetch = FetchType.EAGER)
-	private Grao grao;
+	private List<Grao> graos;
 	@Column(name = "capacity")
 	private Double capacity;
 	@Column(name = "close_date")
@@ -29,10 +30,8 @@ public class Silo {
 	@Column(name = "region")
 	private String region;
 
-	public Silo(Long id, Grao grao, Double capacity, Calendar closeDate, Calendar openDate, String region) {
-		super();
-		this.id = id;
-		this.grao = grao;
+	public Silo(List<Grao> graos, Double capacity, Calendar closeDate, Calendar openDate, String region) {
+		this.graos = graos;
 		this.capacity = capacity;
 		this.closeDate = closeDate;
 		this.openDate = openDate;
@@ -47,12 +46,12 @@ public class Silo {
 		this.id = id;
 	}
 
-	public Grao getGrao() {
-		return grao;
+	public List<Grao> getGraos() {
+		return graos;
 	}
 
-	public void setGrao(Grao grao) {
-		this.grao = grao;
+	public void setGraos(List<Grao> graos) {
+		this.graos = graos;
 	}
 
 	public Double getCapacity() {
