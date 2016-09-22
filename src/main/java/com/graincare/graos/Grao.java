@@ -1,38 +1,68 @@
 package com.graincare.graos;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+import com.graincare.silos.Silo;
+
+@Entity
+@Table(name = "grao")
 public class Grao {
+	@Id
+	@GeneratedValue
+	private Long id;
+	@Column(name = "type")
+	private String type;
+	@Column(name = "max_temperature")
+	private Double maxTemperature;
+	@ManyToOne
+	private Silo silo;
 
-	private Integer graoID;
-	private String graoTipo;
-	private Integer graoTempMax;
+	@Deprecated
+	Grao() {
 
-	public Grao(Integer graoID, String graoTipo, Integer graoTempMax) {
-		this.graoID = graoID;
-		this.graoTempMax = graoTempMax;
-		this.graoTipo = graoTipo;
 	}
 
-	public Integer getGraoID() {
-		return graoID;
+	public Grao(String type, Double maxTemperature, Silo silo) {
+		this.type = type;
+		this.maxTemperature = maxTemperature;
+		this.silo = silo;
 	}
 
-	public Integer getGraoTempMax() {
-		return graoTempMax;
+	public Long getId() {
+		return id;
 	}
 
-	public String getGraoTipo() {
-		return graoTipo;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
-	public void setGraoID(Integer graoID) {
-		this.graoID = graoID;
+	public String getType() {
+		return type;
 	}
 
-	public void setGraoTempMax(Integer graoTempMax) {
-		this.graoTempMax = graoTempMax;
+	public void setType(String type) {
+		this.type = type;
 	}
 
-	public void setGraoTipo(String graoTipo) {
-		this.graoTipo = graoTipo;
+	public Double getMaxTemperature() {
+		return maxTemperature;
 	}
+
+	public void setMaxTemperature(Double maxTemperature) {
+		this.maxTemperature = maxTemperature;
+	}
+
+	public Silo getSilo() {
+		return silo;
+	}
+
+	public void setSilo(Silo silo) {
+		this.silo = silo;
+	}
+
 }

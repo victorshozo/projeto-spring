@@ -15,9 +15,6 @@ public class GraoController {
 
 	public ArrayList<Grao> getGraos() {
 		ArrayList<Grao> graos = new ArrayList<>();
-	       graos.add(new Grao(1, "Milho", 30));
-	        graos.add(new Grao(2, "Soja", 45));
-	        graos.add(new Grao(3, "Sordo", 75));
 
 		return graos;
 	}

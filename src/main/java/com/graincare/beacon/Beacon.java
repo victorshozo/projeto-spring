@@ -1,57 +1,79 @@
 package com.graincare.beacon;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
+import com.graincare.silos.Silo;
+
+@Entity
+@Table(name = "beacon")
 public class Beacon {
-	private Integer beaconID;
-	private long beaconTemperature;
-	private long beaconDistance;
-	private Integer siloID;
-	private long beaconHumidity;
+	@Id
+	@GeneratedValue
+	private Long id;
+	@Column(name = "temperature")
+	private long temperature;
+	@Column(name = "distance")
+	private long distance;
+	@ManyToOne(fetch = FetchType.EAGER)
+	private Silo silo;
+	@Column(name = "humidity")
+	private long humidity;
 
-	public Beacon(Integer beaconID, Integer siloID, long beaconTemperature, long beaconHumidity, long beaconDistance) {
-		this.setBeaconID(beaconID);
-		this.setSiloID(siloID);
-		this.setBeaconTemperature(beaconTemperature);
-		this.setBeaconHumidity(beaconHumidity);
-		this.setBeaconDistance(beaconDistance);
+	@Deprecated
+	Beacon() {
 	}
 
-	public Integer getBeaconID() {
-		return beaconID;
+	public Beacon(long temperature, long distance, Silo silo, long humidity) {
+		this.temperature = temperature;
+		this.distance = distance;
+		this.silo = silo;
+		this.humidity = humidity;
 	}
 
-	public void setBeaconID(Integer beaconID) {
-		this.beaconID = beaconID;
-	}
-	public long getBeaconTemperature() {
-		return beaconTemperature;
+	public Long getId() {
+		return id;
 	}
 
-	public void setBeaconTemperature(long beaconTemperature) {
-		this.beaconTemperature = beaconTemperature;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
-	public long getBeaconDistance() {
-		return beaconDistance;
+	public long getTemperature() {
+		return temperature;
 	}
 
-	public void setBeaconDistance(long beaconDistance) {
-		this.beaconDistance = beaconDistance;
+	public void setTemperature(long temperature) {
+		this.temperature = temperature;
 	}
 
-	public Integer getSiloID() {
-		return siloID;
+	public long getDistance() {
+		return distance;
 	}
 
-	public void setSiloID(Integer siloID) {
-		this.siloID = siloID;
+	public void setDistance(long distance) {
+		this.distance = distance;
 	}
 
-	public long getBeaconHumidity() {
-		return beaconHumidity;
+	public Silo getSilo() {
+		return silo;
 	}
 
-	public void setBeaconHumidity(long beaconHumidity) {
-		this.beaconHumidity = beaconHumidity;
-	}	
+	public void setSilo(Silo silo) {
+		this.silo = silo;
+	}
+
+	public long getHumidity() {
+		return humidity;
+	}
+
+	public void setHumidity(long humidity) {
+		this.humidity = humidity;
+	}
+
 }

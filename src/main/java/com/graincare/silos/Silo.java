@@ -1,69 +1,90 @@
 package com.graincare.silos;
 
+import java.util.Calendar;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+import com.graincare.graos.Grao;
+
+@Entity
+@Table(name = "silo")
 public class Silo {
+	@Id
+	@GeneratedValue
+	private Long id;
+	@OneToMany(fetch = FetchType.EAGER)
+	private Grao grao;
+	@Column(name = "capacity")
+	private Double capacity;
+	@Column(name = "close_date")
+	private Calendar closeDate;
+	@Column(name = "open_date")
+	private Calendar openDate;
+	@Column(name = "region")
+	private String region;
 
-	private long siloID;
-	private long graoID;
-	private Double siloCapacity;
-	private String siloDataClose;
-	private String siloDataOpen;
-	private String siloRegion;
-
-	public Silo(long siloID, long graoID, Double siloCapacity, String siloDataClose, String siloDataOpen,
-			String siloRegion) {
-		this.setSiloID(siloID);
-		this.setGraoID(graoID);
-		this.setSiloCapacity(siloCapacity);
-		this.setSiloRegion(siloRegion);
-		this.setSiloDataClose(siloDataClose);
-		this.setSiloDataOpen(siloDataOpen);
+	public Silo(Long id, Grao grao, Double capacity, Calendar closeDate, Calendar openDate, String region) {
+		super();
+		this.id = id;
+		this.grao = grao;
+		this.capacity = capacity;
+		this.closeDate = closeDate;
+		this.openDate = openDate;
+		this.region = region;
 	}
 
-	public long getSiloID() {
-		return siloID;
+	public Long getId() {
+		return id;
 	}
 
-	public void setSiloID(long siloID) {
-		this.siloID = siloID;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
-	public long getGraoID() {
-		return graoID;
+	public Grao getGrao() {
+		return grao;
 	}
 
-	public void setGraoID(long graoID) {
-		this.graoID = graoID;
+	public void setGrao(Grao grao) {
+		this.grao = grao;
 	}
 
-	public Double getSiloCapacity() {
-		return siloCapacity;
+	public Double getCapacity() {
+		return capacity;
 	}
 
-	public void setSiloCapacity(Double siloCapacity) {
-		this.siloCapacity = siloCapacity;
+	public void setCapacity(Double capacity) {
+		this.capacity = capacity;
 	}
 
-	public String getSiloRegion() {
-		return siloRegion;
+	public Calendar getCloseDate() {
+		return closeDate;
 	}
 
-	public void setSiloRegion(String siloRegion) {
-		this.siloRegion = siloRegion;
+	public void setCloseDate(Calendar closeDate) {
+		this.closeDate = closeDate;
 	}
 
-	public String getSiloDataClose() {
-		return siloDataClose;
+	public Calendar getOpenDate() {
+		return openDate;
 	}
 
-	public void setSiloDataClose(String siloDataClose) {
-		this.siloDataClose = siloDataClose;
+	public void setOpenDate(Calendar openDate) {
+		this.openDate = openDate;
 	}
 
-	public String getSiloDataOpen() {
-		return siloDataOpen;
+	public String getRegion() {
+		return region;
 	}
 
-	public void setSiloDataOpen(String siloDataOpen) {
-		this.siloDataOpen = siloDataOpen;
+	public void setRegion(String region) {
+		this.region = region;
 	}
+
 }
