@@ -1,0 +1,15 @@
+.DS_Store
+/bin
+/lib
+.classpath
+.gradle/
+.project
+.settings/
+build/
+application.properties
+hades.key
+
+!gradle-wrapper.jar
+
+*.orig
+*.swp
