@@ -27,15 +27,15 @@ public class Beacon {
 		return id;
 	}
 
+	public Boolean isActive() {
+		return active;
+	}
+
 	public void setId(Long id) {
 		this.id = id;
 	}
 
-	public Boolean getactive() {
-		return active;
-	}
-
-	public void setactive(Boolean active) {
+	public void setActive(Boolean active) {
 		this.active = active;
 	}
 

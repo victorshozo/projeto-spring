@@ -15,7 +15,6 @@ public class GraoController {
 
 	public ArrayList<Grao> getGraos() {
 		ArrayList<Grao> graos = new ArrayList<>();
-
 		return graos;
 	}
 }
