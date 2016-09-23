@@ -1,17 +1,10 @@
 package com.graincare.silos;
 
-import java.util.Calendar;
-import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
-import com.graincare.graos.Grao;
 
 @Entity
 @Table(name = "silo")
@@ -19,22 +12,17 @@ public class Silo {
 	@Id
 	@GeneratedValue
 	private Long id;
-	@OneToMany(fetch = FetchType.EAGER)
-	private List<Grao> graos;
+	@Column(name = "open_status")
+	private Boolean openStatus;
 	@Column(name = "capacity")
 	private Double capacity;
-	@Column(name = "close_date")
-	private Calendar closeDate;
-	@Column(name = "open_date")
-	private Calendar openDate;
 	@Column(name = "region")
 	private String region;
 
-	public Silo(List<Grao> graos, Double capacity, Calendar closeDate, Calendar openDate, String region) {
-		this.graos = graos;
+	public Silo(Long id, Boolean openStatus, Double capacity, String region) {
+		this.id = id;
+		this.openStatus = openStatus;
 		this.capacity = capacity;
-		this.closeDate = closeDate;
-		this.openDate = openDate;
 		this.region = region;
 	}
 
@@ -46,12 +34,12 @@ public class Silo {
 		this.id = id;
 	}
 
-	public List<Grao> getGraos() {
-		return graos;
+	public Boolean getOpenStatus() {
+		return openStatus;
 	}
 
-	public void setGraos(List<Grao> graos) {
-		this.graos = graos;
+	public void setOpenStatus(Boolean openStatus) {
+		this.openStatus = openStatus;
 	}
 
 	public Double getCapacity() {
@@ -60,22 +48,6 @@ public class Silo {
 
 	public void setCapacity(Double capacity) {
 		this.capacity = capacity;
-	}
-
-	public Calendar getCloseDate() {
-		return closeDate;
-	}
-
-	public void setCloseDate(Calendar closeDate) {
-		this.closeDate = closeDate;
-	}
-
-	public Calendar getOpenDate() {
-		return openDate;
-	}
-
-	public void setOpenDate(Calendar openDate) {
-		this.openDate = openDate;
 	}
 
 	public String getRegion() {
