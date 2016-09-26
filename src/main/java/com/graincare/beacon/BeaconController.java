@@ -11,7 +11,6 @@ public class BeaconController {
 
 	@RequestMapping("/beacons")
 	public List<Beacon> beacon() {
-		return Arrays.asList(
-			);
+		return Arrays.asList();
 	}
 }
