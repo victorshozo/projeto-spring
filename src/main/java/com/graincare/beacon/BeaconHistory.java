@@ -10,6 +10,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.graincare.silos.SiloHistory;
 
 @Entity
@@ -19,10 +20,12 @@ public class BeaconHistory {
 	@GeneratedValue
 	private Long id;
 	@OneToOne
+	@NotNull
 	private Beacon beacon;
 	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "silo_history_id")
+	@JsonBackReference
 	private SiloHistory siloHistory;
 	@Column(name = "temperature")
 	private Double temperature;

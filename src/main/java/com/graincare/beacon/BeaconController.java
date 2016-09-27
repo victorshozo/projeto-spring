@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class BeaconController {
 
-	@RequestMapping("/beacons")
 	public List<Beacon> beacon() {
 		return Arrays.asList();
 	}

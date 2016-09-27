@@ -8,6 +8,7 @@
 build/
 application.properties
 hades.key
+.gradle/*
 
 !gradle-wrapper.jar
 
