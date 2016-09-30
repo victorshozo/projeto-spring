@@ -1,20 +1,22 @@
 package com.graincare.graos;
 
-import java.util.ArrayList;
+import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class GraoController {
 
-	@RequestMapping("/graos")
-	public ArrayList<Grao> grao() {
-		return getGraos();
+	@Autowired
+	private GraoRepository graoRepository;
+
+	@RequestMapping(path = "/graos", produces = "application/json", method = RequestMethod.GET)
+	public List<Grao> getGraos() {
+		return graoRepository.findAll();
 	}
 
-	public ArrayList<Grao> getGraos() {
-		ArrayList<Grao> graos = new ArrayList<>();
-		return graos;
-	}
+	
 }
