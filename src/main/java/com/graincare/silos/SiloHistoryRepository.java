@@ -8,5 +8,7 @@ import org.springframework.data.repository.RepositoryDefinition;
 public interface SiloHistoryRepository {
 
 	List<SiloHistory> findAll();
-
+	
+	List<SiloHistory> findAllByOpenTrue();
+	
 }

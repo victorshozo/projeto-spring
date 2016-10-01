@@ -1,5 +1,6 @@
 package com.graincare.silos;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,18 @@ public class SiloController {
 	@RequestMapping(path = "/silos", produces = "application/json", method = RequestMethod.GET)
 	public List<Silo> getSilos() {
 		return siloRepository.findAll();
+	}
+
+	@RequestMapping(path = "/silos/abertos", produces = "application/json", method = RequestMethod.GET)
+	public List<Silo> getOpenSilos() {
+		List<SiloHistory> silosHistory = siloHistoryRepository.findAllByOpenTrue();
+		List<Silo> silos = new ArrayList<>();
+
+		silosHistory.stream().forEach(siloHistory -> {
+			silos.add(siloHistory.getSilo());
+		});
+
+		return silos;
 	}
 
 }

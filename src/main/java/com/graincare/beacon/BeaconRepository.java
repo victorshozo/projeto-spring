@@ -9,4 +9,6 @@ public interface BeaconRepository {
 
 	List<Beacon> findAll();
 
+	List<Beacon> findAllByAvailableTrue();
+
 }

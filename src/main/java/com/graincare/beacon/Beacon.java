@@ -12,31 +12,31 @@ public class Beacon {
 	@Id
 	@GeneratedValue
 	private Long id;
-	@Column(name = "active")
-	private Boolean active;
+	@Column(name = "available")
+	private Boolean available;
 
 	@Deprecated
 	Beacon() {
 	}
 
-	public Beacon(Boolean active) {
-		this.active = active;
+	public Beacon(Boolean available) {
+		this.available = available;
 	}
 
 	public Long getId() {
 		return id;
 	}
 
-	public Boolean isActive() {
-		return active;
+	public Boolean isAvailable() {
+		return available;
 	}
 
 	public void setId(Long id) {
 		this.id = id;
 	}
 
-	public void setActive(Boolean active) {
-		this.active = active;
+	public void setAvailable(Boolean available) {
+		this.available = available;
 	}
 
 }
