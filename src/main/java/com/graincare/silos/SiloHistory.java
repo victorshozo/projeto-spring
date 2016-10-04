@@ -60,11 +60,11 @@ public class SiloHistory {
 		this.grao = grao;
 	}
 
-	public List<BeaconHistory> getBeacons() {
+	public List<BeaconHistory> getBeaconsHistory() {
 		return beacons;
 	}
 
-	public void setBeacons(List<BeaconHistory> beacons) {
+	public void setBeaconsHistory(List<BeaconHistory> beacons) {
 		this.beacons = beacons;
 	}
 
