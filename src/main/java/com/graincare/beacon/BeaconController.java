@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.graincare.exceptions.SiloHistoryNotFoundException;
 import com.graincare.silos.SiloHistory;
 import com.graincare.silos.SiloHistoryRepository;
 
@@ -44,18 +45,18 @@ public class BeaconController {
 	@RequestMapping(path = "/beacons/silo-history/{siloHistoryId}", produces = "application/json", method = RequestMethod.GET)
 	public List<Beacon> getBeaconsFor(@PathVariable Long siloHistoryId) {
 		Optional<SiloHistory> optionalSiloHistory = siloHistoryRepository.findById(siloHistoryId);
-		if (optionalSiloHistory.isPresent()) {
-			SiloHistory siloHistory = optionalSiloHistory.get();
-			List<BeaconHistory> beaconsHistory = siloHistory.getBeaconsHistory();
-
-			List<Beacon> beacons = new ArrayList<>();
-			for (BeaconHistory beaconHistory : beaconsHistory) {
-				beacons.add(beaconHistory.getBeacon());
-			}
-			return beacons;
+		if (!optionalSiloHistory.isPresent()) {
+			throw new SiloHistoryNotFoundException();
 		}
-		return null;
-		// TODO colocar exceção com a mensagem gay <3
+
+		SiloHistory siloHistory = optionalSiloHistory.get();
+		List<BeaconHistory> beaconsHistory = siloHistory.getBeaconsHistory();
+
+		List<Beacon> beacons = new ArrayList<>();
+		for (BeaconHistory beaconHistory : beaconsHistory) {
+			beacons.add(beaconHistory.getBeacon());
+		}
+		return beacons;
 
 	}
 
