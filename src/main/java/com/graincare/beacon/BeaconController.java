@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -60,4 +61,17 @@ public class BeaconController {
 
 	}
 
+	@RequestMapping(path = "/beacon", method = RequestMethod.POST)
+	public void update(@RequestBody BeaconHistoryDTO dto) {
+		Optional<BeaconHistory> optionalBeaconHistory = beaconHistoryRepository.findByBeaconId(dto.getBeaconId());
+		if (!optionalBeaconHistory.isPresent()) {
+			throw new BeaconHistoryNotFoundException();
+		}
+		
+		BeaconHistory beaconHistory = optionalBeaconHistory.get();
+		beaconHistory.setHumidity(dto.getHumidity());
+		beaconHistory.setDistance(dto.getDistance());
+		beaconHistory.setTemperature(dto.getTemperature());
+		beaconHistoryRepository.save(beaconHistory);
+	}
 }
