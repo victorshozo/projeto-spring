@@ -10,7 +10,7 @@ public interface BeaconHistoryRepository {
 
 	List<BeaconHistory> findAll();
 
-	Optional<BeaconHistory> findByBeaconId(Long beaconId);
+	Optional<BeaconHistory> findByBeaconIdAndDeletedFalse(Long beaconId);
 
 	BeaconHistory save(BeaconHistory beaconHistory);
 
