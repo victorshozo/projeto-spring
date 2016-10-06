@@ -1,6 +1,7 @@
 package com.graincare.beacon;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.repository.RepositoryDefinition;
 
@@ -8,5 +9,9 @@ import org.springframework.data.repository.RepositoryDefinition;
 public interface BeaconHistoryRepository {
 
 	List<BeaconHistory> findAll();
+
+	Optional<BeaconHistory> findByBeaconId(Long beaconId);
+
+	BeaconHistory save(BeaconHistory beaconHistory);
 
 }
