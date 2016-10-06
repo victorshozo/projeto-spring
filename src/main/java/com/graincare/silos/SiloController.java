@@ -1,12 +1,17 @@
 package com.graincare.silos;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.graincare.exceptions.SiloHistoryNotFoundException;
 
 @RestController
 public class SiloController {
@@ -36,6 +41,22 @@ public class SiloController {
 		});
 
 		return silos;
+	}
+
+	@RequestMapping(path = "/silo/open/{siloHistoryId}", method = RequestMethod.POST)
+	public void openSilo(@PathVariable Long siloHistoryId) {
+		Optional<SiloHistory> optionalSiloHistory = siloHistoryRepository.findById(siloHistoryId);
+		if (!optionalSiloHistory.isPresent()) {
+			throw new SiloHistoryNotFoundException();
+		}
+
+		SiloHistory siloHistory = optionalSiloHistory.get();
+		siloHistory.setOpen(true);
+		siloHistory.setOpenedAt(Calendar.getInstance());
+		siloHistory.getBeaconsHistory().stream().forEach(beaconHistory -> {
+			beaconHistory.setDeleted(true);
+		});
+		siloHistoryRepository.save(siloHistory);
 	}
 
 }

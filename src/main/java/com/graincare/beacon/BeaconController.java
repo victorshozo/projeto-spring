@@ -64,11 +64,12 @@ public class BeaconController {
 
 	@RequestMapping(path = "/beacon", method = RequestMethod.POST)
 	public void update(@RequestBody BeaconHistoryDTO dto) {
-		Optional<BeaconHistory> optionalBeaconHistory = beaconHistoryRepository.findByBeaconId(dto.getBeaconId());
+		Optional<BeaconHistory> optionalBeaconHistory = beaconHistoryRepository
+				.findByBeaconIdAndDeletedFalse(dto.getBeaconId());
 		if (!optionalBeaconHistory.isPresent()) {
 			throw new BeaconHistoryNotFoundException();
 		}
-		
+
 		BeaconHistory beaconHistory = optionalBeaconHistory.get();
 		beaconHistory.setHumidity(dto.getHumidity());
 		beaconHistory.setDistance(dto.getDistance());

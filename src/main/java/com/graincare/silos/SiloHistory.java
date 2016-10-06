@@ -3,6 +3,7 @@ package com.graincare.silos;
 import java.util.Calendar;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -27,7 +28,7 @@ public class SiloHistory {
 	@OneToOne
 	@NotNull
 	private Grao grao;
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "siloHistory")
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "siloHistory", cascade = CascadeType.MERGE)
 	@JsonManagedReference
 	private List<BeaconHistory> beacons;
 	@Column(name = "opened_at")
