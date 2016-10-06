@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.graincare.exceptions.BeaconHistoryNotFoundException;
 import com.graincare.exceptions.SiloHistoryNotFoundException;
 import com.graincare.silos.SiloHistory;
 import com.graincare.silos.SiloHistoryRepository;
