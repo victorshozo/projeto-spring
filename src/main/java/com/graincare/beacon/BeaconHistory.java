@@ -37,7 +37,7 @@ public class BeaconHistory {
 	private boolean deleted;
 
 	@Deprecated
-	BeaconHistory() {
+	public BeaconHistory() {
 	}
 
 	public Long getId() {
