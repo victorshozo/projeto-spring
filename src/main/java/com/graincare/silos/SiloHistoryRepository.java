@@ -14,6 +14,8 @@ public interface SiloHistoryRepository {
 
 	Optional<SiloHistory> findById(Long siloHistoryId);
 
+	Optional<SiloHistory> findBySiloIdAndOpenFalse(Long siloId);
+
 	SiloHistory save(SiloHistory siloHistory);
 
 }

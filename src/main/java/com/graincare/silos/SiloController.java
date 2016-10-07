@@ -43,9 +43,9 @@ public class SiloController {
 		return silos;
 	}
 
-	@RequestMapping(path = "/silo/open/{siloHistoryId}", method = RequestMethod.POST)
-	public void openSilo(@PathVariable Long siloHistoryId) {
-		Optional<SiloHistory> optionalSiloHistory = siloHistoryRepository.findById(siloHistoryId);
+	@RequestMapping(path = "/silo/open/{siloId}", method = RequestMethod.POST)
+	public void openSilo(@PathVariable Long siloId) {
+		Optional<SiloHistory> optionalSiloHistory = siloHistoryRepository.findBySiloIdAndOpenFalse(siloId);
 		if (!optionalSiloHistory.isPresent()) {
 			throw new SiloHistoryNotFoundException();
 		}
