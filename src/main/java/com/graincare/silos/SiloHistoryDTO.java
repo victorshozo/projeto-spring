@@ -9,8 +9,7 @@ public class SiloHistoryDTO {
 
 	private Long siloId;
 	private List<Beacon> beacons;
-	// TODO alterar o nome desse atributo
-	private GrainType grain;
+	private GrainType grainType;
 
 	public Long getSiloId() {
 		return siloId;
@@ -29,11 +28,11 @@ public class SiloHistoryDTO {
 	}
 
 	public GrainType getGrain() {
-		return grain;
+		return grainType;
 	}
 
 	public void setGrain(GrainType grain) {
-		this.grain = grain;
+		this.grainType = grain;
 	}
 
 }

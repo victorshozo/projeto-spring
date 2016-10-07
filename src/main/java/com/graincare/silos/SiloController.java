@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.graincare.beacon.Beacon;
 import com.graincare.beacon.BeaconHistory;
 import com.graincare.beacon.BeaconHistoryRepository;
+import com.graincare.exceptions.GrainNotFoundException;
 import com.graincare.exceptions.SiloHistoryNotFoundException;
+import com.graincare.exceptions.SiloNotFoundException;
 import com.graincare.graos.Grao;
 import com.graincare.graos.GraoRepository;
 
@@ -69,27 +71,30 @@ public class SiloController {
 		siloHistoryRepository.save(siloHistory);
 	}
 
-	// TODO exception status code BAD REQUEST 400
 	@RequestMapping(path = "/silo/history", method = RequestMethod.POST)
 	public void createSiloHistory(@RequestBody SiloHistoryDTO dto) {
 		Optional<Grao> optionalGrao = graoRepository.findByGrainType(dto.getGrain());
 		Optional<Silo> optionalSilo = siloRepository.findById(dto.getSiloId());
 
-		if (optionalGrao.isPresent()) {
-			SiloHistory siloHistory = new SiloHistory();
-			siloHistory.setClosedAt(Calendar.getInstance());
-			siloHistory.setGrao(optionalGrao.get());
-			siloHistory.setOpen(false);
-			siloHistory.setSilo(optionalSilo.get());
-			siloHistoryRepository.save(siloHistory);
+		if (!optionalGrao.isPresent()) {
+			throw new GrainNotFoundException();
+		}
+		if (!optionalSilo.isPresent()) {
+			throw new SiloNotFoundException();
+		}
+		SiloHistory siloHistory = new SiloHistory();
+		siloHistory.setClosedAt(Calendar.getInstance());
+		siloHistory.setGrao(optionalGrao.get());
+		siloHistory.setOpen(false);
+		siloHistory.setSilo(optionalSilo.get());
+		siloHistoryRepository.save(siloHistory);
 
-			for (Beacon beacon : dto.getBeacons()) {
-				BeaconHistory beaconHistory = new BeaconHistory();
-				beaconHistory.setBeacon(beacon);
-				beaconHistory.setDeleted(false);
-				beaconHistory.setSiloHistory(siloHistory);
-				beaconHistoryRepository.save(beaconHistory);
-			}
+		for (Beacon beacon : dto.getBeacons()) {
+			BeaconHistory beaconHistory = new BeaconHistory();
+			beaconHistory.setBeacon(beacon);
+			beaconHistory.setDeleted(false);
+			beaconHistory.setSiloHistory(siloHistory);
+			beaconHistoryRepository.save(beaconHistory);
 
 		}
 	}
