@@ -13,5 +13,6 @@ public interface BeaconHistoryRepository {
 	Optional<BeaconHistory> findByBeaconIdAndDeletedFalse(Long beaconId);
 
 	BeaconHistory save(BeaconHistory beaconHistory);
+	
 
 }
