@@ -16,6 +16,8 @@ public class Silo {
 	private Double capacity;
 	@Column(name = "region")
 	private String region;
+	@Column(name = "size")
+	private Double size = 30d;
 
 	@Deprecated
 	Silo() {
@@ -45,4 +47,11 @@ public class Silo {
 		this.region = region;
 	}
 
+	public Double getSize() {
+		return size;
+	}
+
+	public void setSize(Double size) {
+		this.size = size;
+	}
 }
