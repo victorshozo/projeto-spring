@@ -23,7 +23,7 @@ import com.graincare.graos.GraoRepository;
 
 @RestController
 public class SiloController {
-
+	
 	@Autowired
 	private SiloHistoryRepository siloHistoryRepository;
 	@Autowired
@@ -97,6 +97,25 @@ public class SiloController {
 			beaconHistoryRepository.save(beaconHistory);
 
 		}
+	}
+	
+	@RequestMapping(path = "/silo/capacity/{siloId}", method = RequestMethod.GET)
+	public Double getSiloCapacity(@PathVariable Long siloId){
+		Optional<SiloHistory> optionalSiloHistory = siloHistoryRepository.findBySiloIdAndOpenFalse(siloId);
+		if(!optionalSiloHistory.isPresent()) {
+			throw new SiloNotFoundException();
+		}
+		SiloHistory siloHistory = optionalSiloHistory.get();
+		
+		Double siloFullPercent = 0.0;
+		
+		for (BeaconHistory beaconHistory : siloHistory.getBeaconsHistory()) {
+			if(beaconHistory.getDistance() != null) {
+				siloFullPercent = (beaconHistory.getDistance() * 100.0) / siloHistory.getSilo().getSize();
+			}
+		}
+		
+		return siloFullPercent;
 	}
 
 }
