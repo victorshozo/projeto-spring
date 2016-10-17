@@ -1,8 +1,8 @@
 package com.graincare.graos;
 
 public enum GrainType {
-	MILHO(36),
-	SOJA(55)
+	MILHO(36.0),
+	SOJA(55.0)
 	;
 private Double maxTemperature;
 
