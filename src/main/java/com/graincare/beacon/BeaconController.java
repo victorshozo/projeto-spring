@@ -38,7 +38,7 @@ public class BeaconController {
 	}
 
 	@RequestMapping(path = "/beacons/silo/{siloId}", produces = "application/json", method = RequestMethod.GET)
-	public List<Beacon> getBeaconsFor(@PathVariable Long siloId) {
+	public List<BeaconHistory> getBeaconsFor(@PathVariable Long siloId) {
 		Optional<SiloHistory> optionalSiloHistory = siloHistoryRepository.findBySiloIdAndOpenFalse(siloId);
 		if (!optionalSiloHistory.isPresent()) {
 			throw new SiloNotFoundException();
@@ -46,11 +46,7 @@ public class BeaconController {
 
 		SiloHistory siloHistory = optionalSiloHistory.get();
 
-		List<Beacon> beacons = new ArrayList<>();
-		siloHistory.getBeaconsHistory().stream().forEach(b -> beacons.add(b.getBeacon()));
-
-		return beacons;
-
+		return siloHistory.getBeaconsHistory();
 	}
 
 	@RequestMapping(path = "/beacons/available", produces = "application/json", method = RequestMethod.GET)
