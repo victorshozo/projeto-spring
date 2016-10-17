@@ -1,6 +1,7 @@
 package com.graincare.beacon;
 
-import javax.persistence.Column;
+import java.util.Objects;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -12,31 +13,27 @@ public class Beacon {
 	@Id
 	@GeneratedValue
 	private Long id;
-	@Column(name = "available")
-	private Boolean available;
 
 	@Deprecated
 	Beacon() {
-	}
-
-	public Beacon(Boolean available) {
-		this.available = available;
 	}
 
 	public Long getId() {
 		return id;
 	}
 
-	public Boolean isAvailable() {
-		return available;
-	}
-
 	public void setId(Long id) {
 		this.id = id;
 	}
 
-	public void setAvailable(Boolean available) {
-		this.available = available;
-	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!(obj instanceof Beacon))
+			return false;
 
+		Beacon other = (Beacon) obj;
+		return Objects.equals(this.id, other.id);
+	}
 }

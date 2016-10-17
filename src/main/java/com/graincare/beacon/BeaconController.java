@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.graincare.exceptions.BeaconHistoryNotFoundException;
-import com.graincare.exceptions.SiloHistoryNotFoundException;
+import com.graincare.exceptions.SiloNotFoundException;
 import com.graincare.silos.SiloHistory;
 import com.graincare.silos.SiloHistoryRepository;
 
@@ -24,48 +24,57 @@ public class BeaconController {
 
 	@Autowired
 	private BeaconHistoryRepository beaconHistoryRepository;
-
 	@Autowired
 	private SiloHistoryRepository siloHistoryRepository;
 
-	@RequestMapping(path = "/beacon", produces = "application/json", method = RequestMethod.GET)
-	public List<Beacon> getBeacon() {
-		return beaconRepository.findAll();
-	}
-
-	@RequestMapping(path = "/beacon/history", produces = "application/json", method = RequestMethod.GET)
+	@RequestMapping(path = "/beacons/history", produces = "application/json", method = RequestMethod.GET)
 	public List<BeaconHistory> getBeaconHistory() {
 		return beaconHistoryRepository.findAll();
 	}
 
-	@RequestMapping(path = "/beacon/disponivel", produces = "application/json", method = RequestMethod.GET)
-	public List<Beacon> getAvailableBeacons() {
-		return beaconRepository.findAllByAvailableTrue();
-
+	@RequestMapping(path = "/beacons", produces = "application/json", method = RequestMethod.GET)
+	public List<Beacon> getBeacon() {
+		return beaconRepository.findAll();
 	}
 
-	@RequestMapping(path = "/beacons/silo-history/{siloHistoryId}", produces = "application/json", method = RequestMethod.GET)
-	public List<Beacon> getBeaconsFor(@PathVariable Long siloHistoryId) {
-		Optional<SiloHistory> optionalSiloHistory = siloHistoryRepository.findById(siloHistoryId);
+	@RequestMapping(path = "/beacons/silo/{siloId}", produces = "application/json", method = RequestMethod.GET)
+	public List<Beacon> getBeaconsFor(@PathVariable Long siloId) {
+		Optional<SiloHistory> optionalSiloHistory = siloHistoryRepository.findBySiloIdAndOpenFalse(siloId);
 		if (!optionalSiloHistory.isPresent()) {
-			throw new SiloHistoryNotFoundException();
+			throw new SiloNotFoundException();
 		}
 
 		SiloHistory siloHistory = optionalSiloHistory.get();
-		List<BeaconHistory> beaconsHistory = siloHistory.getBeaconsHistory();
 
 		List<Beacon> beacons = new ArrayList<>();
-		for (BeaconHistory beaconHistory : beaconsHistory) {
-			beacons.add(beaconHistory.getBeacon());
-		}
+		siloHistory.getBeaconsHistory().stream().forEach(b -> beacons.add(b.getBeacon()));
+
 		return beacons;
 
 	}
 
-	@RequestMapping(path = "/beacon", method = RequestMethod.POST)
+	@RequestMapping(path = "/beacons/available", produces = "application/json", method = RequestMethod.GET)
+	public List<Beacon> getAvailableBeacons() {
+		List<Beacon> allBeacons = beaconRepository.findAll();
+
+		List<Beacon> unavailableBeacons = new ArrayList<>();
+		siloHistoryRepository.findAllByOpenFalse().forEach(s -> {
+			s.getBeaconsHistory().forEach(b -> unavailableBeacons.add(b.getBeacon()));
+		});
+
+		List<Beacon> beacons = new ArrayList<>();
+		allBeacons.stream().forEach(beacon -> {
+			if (!unavailableBeacons.contains(beacon)) {
+				beacons.add(beacon);
+			}
+		});
+
+		return beacons;
+	}
+
+	@RequestMapping(path = "/beacon/history", method = RequestMethod.POST)
 	public void update(@RequestBody BeaconHistoryDTO dto) {
-		Optional<BeaconHistory> optionalBeaconHistory = beaconHistoryRepository
-				.findByBeaconIdAndDeletedFalse(dto.getBeaconId());
+		Optional<BeaconHistory> optionalBeaconHistory = beaconHistoryRepository.findByBeaconId(dto.getBeaconId());
 		if (!optionalBeaconHistory.isPresent()) {
 			throw new BeaconHistoryNotFoundException();
 		}

@@ -15,21 +15,16 @@ import org.springframework.web.bind.annotation.RestController;
 import com.graincare.beacon.Beacon;
 import com.graincare.beacon.BeaconHistory;
 import com.graincare.beacon.BeaconHistoryRepository;
-import com.graincare.exceptions.GrainNotFoundException;
 import com.graincare.exceptions.SiloHistoryNotFoundException;
 import com.graincare.exceptions.SiloNotFoundException;
-import com.graincare.graos.Grao;
-import com.graincare.graos.GraoRepository;
 
 @RestController
 public class SiloController {
-	
+
 	@Autowired
 	private SiloHistoryRepository siloHistoryRepository;
 	@Autowired
 	private SiloRepository siloRepository;
-	@Autowired
-	private GraoRepository graoRepository;
 	@Autowired
 	private BeaconHistoryRepository beaconHistoryRepository;
 
@@ -38,24 +33,50 @@ public class SiloController {
 		return siloHistoryRepository.findAll();
 	}
 
-	@RequestMapping(path = "/silos", produces = "application/json", method = RequestMethod.GET)
-	public List<Silo> getSilos() {
-		return siloRepository.findAll();
-	}
-
-	@RequestMapping(path = "/silos/abertos", produces = "application/json", method = RequestMethod.GET)
+	@RequestMapping(path = "/silos/open", produces = "application/json", method = RequestMethod.GET)
 	public List<Silo> getOpenSilos() {
-		List<SiloHistory> silosHistory = siloHistoryRepository.findAllByOpenTrue();
-		List<Silo> silos = new ArrayList<>();
+		List<Silo> allSilos = siloRepository.findAll();
 
-		silosHistory.stream().forEach(siloHistory -> {
-			silos.add(siloHistory.getSilo());
+		List<Silo> closedSilos = new ArrayList<>();
+		siloHistoryRepository.findAllByOpenFalse().stream().forEach(s -> {
+			closedSilos.add(s.getSilo());
+		});
+
+		List<Silo> silos = new ArrayList<>();
+		allSilos.stream().forEach(silo -> {
+			if (!closedSilos.contains(silo)) {
+				silos.add(silo);
+			}
 		});
 
 		return silos;
 	}
 
-	@RequestMapping(path = "/silo/open/{siloId}", method = RequestMethod.POST)
+	@RequestMapping(path = "/silo/{siloId}/capacity", method = RequestMethod.GET)
+	public Double getSiloCapacity(@PathVariable Long siloId) {
+		Optional<SiloHistory> optionalSiloHistory = siloHistoryRepository.findBySiloIdAndOpenFalse(siloId);
+		if (!optionalSiloHistory.isPresent()) {
+			throw new SiloNotFoundException();
+		}
+		SiloHistory siloHistory = optionalSiloHistory.get();
+
+		Double siloFullPercent = 0.0;
+
+		for (BeaconHistory beaconHistory : siloHistory.getBeaconsHistory()) {
+			if (beaconHistory.getDistance() != null) {
+				siloFullPercent = (beaconHistory.getDistance() * 100.0) / siloHistory.getSilo().getSize();
+			}
+		}
+
+		return siloFullPercent;
+	}
+
+	@RequestMapping(path = "/silos", produces = "application/json", method = RequestMethod.GET)
+	public List<Silo> getSilos() {
+		return siloRepository.findAll();
+	}
+
+	@RequestMapping(path = "/silo/{siloId}/open", method = RequestMethod.POST)
 	public void openSilo(@PathVariable Long siloId) {
 		Optional<SiloHistory> optionalSiloHistory = siloHistoryRepository.findBySiloIdAndOpenFalse(siloId);
 		if (!optionalSiloHistory.isPresent()) {
@@ -65,26 +86,18 @@ public class SiloController {
 		SiloHistory siloHistory = optionalSiloHistory.get();
 		siloHistory.setOpen(true);
 		siloHistory.setOpenedAt(Calendar.getInstance());
-		siloHistory.getBeaconsHistory().stream().forEach(beaconHistory -> {
-			beaconHistory.setDeleted(true);
-		});
 		siloHistoryRepository.save(siloHistory);
 	}
 
 	@RequestMapping(path = "/silo/history", method = RequestMethod.POST)
 	public void createSiloHistory(@RequestBody SiloHistoryDTO dto) {
-		Optional<Grao> optionalGrao = graoRepository.findByGrainType(dto.getGrain());
 		Optional<Silo> optionalSilo = siloRepository.findById(dto.getSiloId());
-
-		if (!optionalGrao.isPresent()) {
-			throw new GrainNotFoundException();
-		}
 		if (!optionalSilo.isPresent()) {
 			throw new SiloNotFoundException();
 		}
 		SiloHistory siloHistory = new SiloHistory();
 		siloHistory.setClosedAt(Calendar.getInstance());
-		siloHistory.setGrao(optionalGrao.get());
+		siloHistory.setGrao(dto.getGrain());
 		siloHistory.setOpen(false);
 		siloHistory.setSilo(optionalSilo.get());
 		siloHistoryRepository.save(siloHistory);
@@ -92,30 +105,9 @@ public class SiloController {
 		for (Beacon beacon : dto.getBeacons()) {
 			BeaconHistory beaconHistory = new BeaconHistory();
 			beaconHistory.setBeacon(beacon);
-			beaconHistory.setDeleted(false);
 			beaconHistory.setSiloHistory(siloHistory);
 			beaconHistoryRepository.save(beaconHistory);
-
 		}
-	}
-	
-	@RequestMapping(path = "/silo/capacity/{siloId}", method = RequestMethod.GET)
-	public Double getSiloCapacity(@PathVariable Long siloId){
-		Optional<SiloHistory> optionalSiloHistory = siloHistoryRepository.findBySiloIdAndOpenFalse(siloId);
-		if(!optionalSiloHistory.isPresent()) {
-			throw new SiloNotFoundException();
-		}
-		SiloHistory siloHistory = optionalSiloHistory.get();
-		
-		Double siloFullPercent = 0.0;
-		
-		for (BeaconHistory beaconHistory : siloHistory.getBeaconsHistory()) {
-			if(beaconHistory.getDistance() != null) {
-				siloFullPercent = (beaconHistory.getDistance() * 100.0) / siloHistory.getSilo().getSize();
-			}
-		}
-		
-		return siloFullPercent;
 	}
 
 }

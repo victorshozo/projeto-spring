@@ -9,10 +9,8 @@ import org.springframework.data.repository.RepositoryDefinition;
 public interface SiloHistoryRepository {
 
 	List<SiloHistory> findAll();
-
-	List<SiloHistory> findAllByOpenTrue();
-
-	Optional<SiloHistory> findById(Long siloHistoryId);
+	
+	List<SiloHistory> findAllByOpenFalse();
 
 	Optional<SiloHistory> findBySiloIdAndOpenFalse(Long siloId);
 

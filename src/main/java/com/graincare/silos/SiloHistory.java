@@ -6,6 +6,8 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -16,7 +18,7 @@ import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.graincare.beacon.BeaconHistory;
-import com.graincare.graos.Grao;
+import com.graincare.graos.GrainType;
 
 @Entity
 @Table(name = "silo_history")
@@ -25,12 +27,12 @@ public class SiloHistory {
 	@Id
 	@GeneratedValue
 	private Long id;
-	@OneToOne
 	@NotNull
-	private Grao grao;
+	@Enumerated(EnumType.STRING)
+	private GrainType grao;
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "siloHistory", cascade = CascadeType.MERGE)
 	@JsonManagedReference
-	private List<BeaconHistory> beacons;
+	private List<BeaconHistory> beaconsHistory;
 	@Column(name = "opened_at")
 	private Calendar openedAt;
 	@Column(name = "closed_at")
@@ -53,20 +55,20 @@ public class SiloHistory {
 		this.id = id;
 	}
 
-	public Grao getGrao() {
+	public GrainType getGrao() {
 		return grao;
 	}
 
-	public void setGrao(Grao grao) {
+	public void setGrao(GrainType grao) {
 		this.grao = grao;
 	}
 
 	public List<BeaconHistory> getBeaconsHistory() {
-		return beacons;
+		return beaconsHistory;
 	}
 
-	public void setBeaconsHistory(List<BeaconHistory> beacons) {
-		this.beacons = beacons;
+	public void setBeaconsHistory(List<BeaconHistory> beaconsHistory) {
+		this.beaconsHistory = beaconsHistory;
 	}
 
 	public Calendar getOpenedAt() {

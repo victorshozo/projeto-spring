@@ -33,8 +33,6 @@ public class BeaconHistory {
 	private Double distance;
 	@Column(name = "humidity")
 	private Double humidity;
-	@Column(name = "deleted")
-	private boolean deleted;
 
 	@Deprecated
 	public BeaconHistory() {
@@ -86,14 +84,6 @@ public class BeaconHistory {
 
 	public void setHumidity(Double humidity) {
 		this.humidity = humidity;
-	}
-
-	public boolean isDeleted() {
-		return deleted;
-	}
-
-	public void setDeleted(boolean deleted) {
-		this.deleted = deleted;
 	}
 
 }

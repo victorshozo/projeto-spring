@@ -1,5 +1,7 @@
 package com.graincare.silos;
 
+import java.util.Objects;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -53,5 +55,16 @@ public class Silo {
 
 	public void setSize(Double size) {
 		this.size = size;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!(obj instanceof Silo))
+			return false;
+
+		Silo other = (Silo) obj;
+		return Objects.equals(this.id, other.id);
 	}
 }

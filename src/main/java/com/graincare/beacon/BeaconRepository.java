@@ -8,7 +8,5 @@ import org.springframework.data.repository.RepositoryDefinition;
 public interface BeaconRepository {
 
 	List<Beacon> findAll();
-
-	List<Beacon> findAllByAvailableTrue();
-
+	
 }
