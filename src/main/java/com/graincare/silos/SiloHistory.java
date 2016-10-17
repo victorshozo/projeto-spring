@@ -16,6 +16,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.graincare.beacon.BeaconHistory;
 import com.graincare.graos.GrainType;
@@ -36,6 +37,7 @@ public class SiloHistory {
 	@Column(name = "opened_at")
 	private Calendar openedAt;
 	@Column(name = "closed_at")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
 	private Calendar closedAt;
 	@Column(name = "open")
 	private Boolean open;

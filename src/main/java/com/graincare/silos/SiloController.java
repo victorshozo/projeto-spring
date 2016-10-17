@@ -33,7 +33,12 @@ public class SiloController {
 		return siloHistoryRepository.findAll();
 	}
 
-	@RequestMapping(path = "/silos/open", produces = "application/json", method = RequestMethod.GET)
+	@RequestMapping(path = "/silos/history/closed", produces = "application/json", method = RequestMethod.GET)
+	public List<SiloHistory> getClosedSilosHistory() {
+		return siloHistoryRepository.findAllByOpenFalse();
+	}
+
+	@RequestMapping(path = "/silos/available", produces = "application/json", method = RequestMethod.GET)
 	public List<Silo> getOpenSilos() {
 		List<Silo> allSilos = siloRepository.findAll();
 
@@ -110,4 +115,21 @@ public class SiloController {
 		}
 	}
 
+	@RequestMapping(path = "/silo/{siloId}/prediction", method = RequestMethod.GET)	
+	public PredictionSiloDTO getPrediction(@PathVariable Long siloId) {
+		Optional<SiloHistory> optionalSiloHistory = siloHistoryRepository.findBySiloIdAndOpenFalse(siloId);
+		if (!optionalSiloHistory.isPresent()) {
+			throw new SiloHistoryNotFoundException();
+		}
+		
+		SiloHistory siloHistory = optionalSiloHistory.get();
+
+		Calendar closedAt = siloHistory.getClosedAt();
+		closedAt.add(Calendar.DATE, 21);
+		
+		PredictionSiloDTO predictionDTO = new PredictionSiloDTO();
+		predictionDTO.setDate(closedAt);
+		
+		return predictionDTO;
+	}
 }
