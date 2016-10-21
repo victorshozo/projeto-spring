@@ -1,38 +1,39 @@
 package com.graincare.silos;
 
+import java.util.Calendar;
 import java.util.List;
 
-import com.graincare.beacon.Beacon;
 import com.graincare.graos.GrainType;
 
 public class SiloHistoryDTO {
 
 	private Long siloId;
-	private List<Beacon> beacons;
+	private List<Long> beaconsId;
 	private GrainType grainType;
-
+	private Calendar closedAt;
+	
 	public Long getSiloId() {
 		return siloId;
 	}
-
 	public void setSiloId(Long siloId) {
 		this.siloId = siloId;
 	}
-
-	public List<Beacon> getBeacons() {
-		return beacons;
+	public List<Long> getBeaconsId() {
+		return beaconsId;
 	}
-
-	public void setBeacons(List<Beacon> beacons) {
-		this.beacons = beacons;
+	public void setBeaconsId(List<Long> beaconsId) {
+		this.beaconsId = beaconsId;
 	}
-
-	public GrainType getGrain() {
+	public GrainType getGrainType() {
 		return grainType;
 	}
-
-	public void setGrain(GrainType grain) {
-		this.grainType = grain;
+	public void setGrainType(GrainType grainType) {
+		this.grainType = grainType;
 	}
-
+	public Calendar getClosedAt() {
+		return closedAt;
+	}
+	public void setClosedAt(Calendar closedAt) {
+		this.closedAt = closedAt;
+	}
 }

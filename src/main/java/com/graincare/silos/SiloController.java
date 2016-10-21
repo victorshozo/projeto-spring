@@ -104,12 +104,14 @@ public class SiloController {
 		}
 		SiloHistory siloHistory = new SiloHistory();
 		siloHistory.setClosedAt(Calendar.getInstance());
-		siloHistory.setGrao(dto.getGrain());
+		siloHistory.setGrao(dto.getGrainType());
 		siloHistory.setOpen(false);
 		siloHistory.setSilo(optionalSilo.get());
 		siloHistoryRepository.save(siloHistory);
 
-		for (Beacon beacon : dto.getBeacons()) {
+		for (Long beaconId : dto.getBeaconsId()) {
+			Beacon beacon = new Beacon(beaconId);
+			
 			BeaconHistory beaconHistory = new BeaconHistory();
 			beaconHistory.setBeacon(beacon);
 			beaconHistory.setSiloHistory(siloHistory);

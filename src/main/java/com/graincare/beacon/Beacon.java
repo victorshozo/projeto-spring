@@ -10,12 +10,17 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "beacon")
 public class Beacon {
+	
 	@Id
 	@GeneratedValue
 	private Long id;
 
 	@Deprecated
 	Beacon() {
+	}
+	
+	public Beacon(Long id) {
+		this.id = id;
 	}
 
 	public Long getId() {

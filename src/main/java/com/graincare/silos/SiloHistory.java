@@ -45,10 +45,6 @@ public class SiloHistory {
 	@NotNull
 	private Silo silo;
 
-	@Deprecated
-	SiloHistory() {
-	}
-
 	public Long getId() {
 		return id;
 	}

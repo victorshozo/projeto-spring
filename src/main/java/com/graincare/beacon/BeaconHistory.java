@@ -34,10 +34,6 @@ public class BeaconHistory {
 	@Column(name = "humidity")
 	private Double humidity;
 
-	@Deprecated
-	public BeaconHistory() {
-	}
-
 	public Long getId() {
 		return id;
 	}
