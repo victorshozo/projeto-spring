@@ -3,6 +3,7 @@ package com.graincare.beacon;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,7 +22,6 @@ public class BeaconController {
 
 	@Autowired
 	private BeaconRepository beaconRepository;
-
 	@Autowired
 	private BeaconHistoryRepository beaconHistoryRepository;
 	@Autowired
@@ -70,15 +70,53 @@ public class BeaconController {
 
 	@RequestMapping(path = "/beacon/history", method = RequestMethod.POST)
 	public void update(@RequestBody BeaconHistoryDTO dto) {
-		Optional<BeaconHistory> optionalBeaconHistory = beaconHistoryRepository.findByBeaconId(dto.getBeaconId());
-		if (!optionalBeaconHistory.isPresent()) {
+		List<BeaconHistory> beaconsHistories = beaconHistoryRepository.findByBeaconId(dto.getBeaconId());
+		if(beaconsHistories.size() == 0) {
 			throw new BeaconHistoryNotFoundException();
 		}
-
-		BeaconHistory beaconHistory = optionalBeaconHistory.get();
+		
+		List<BeaconHistory> openBeaconsHistories = beaconsHistories.stream().filter(beaconHistory -> {
+			return beaconHistory.getSiloHistory().getOpen() == false;
+		}).collect(Collectors.toList());
+			
+		if(openBeaconsHistories.size() > 1){
+			throw new RuntimeException("Fodeu a porra toda");
+		}
+		
+		//oww fuck
+		BeaconHistory beaconHistory = openBeaconsHistories.get(0);
 		beaconHistory.setHumidity(dto.getHumidity());
 		beaconHistory.setDistance(dto.getDistance());
 		beaconHistory.setTemperature(dto.getTemperature());
 		beaconHistoryRepository.save(beaconHistory);
+		
+		
+//		List<SiloHistory> allSiloHistories = new ArrayList<>();
+//		beaconsHistories.stream().forEach(b -> allSiloHistories.add(b.getSiloHistory()));
+//		
+//		List<SiloHistory> closedSiloHistories = allSiloHistories.stream().filter(silo -> {
+//			return silo.getOpen() == false;
+//		}).collect(Collectors.toList());
+//		
+//		if(closedSiloHistories.size() > 1) {
+//			throw new RuntimeException("Fodeu a porra toda");
+//		}
+//		
+//		
+//		BeaconHistory beaconHistory = new BeaconHistory();
+		
+		
+//		for (SiloHistory siloHistory : closedSiloHistories) {
+//			if (siloHistory.getBeaconsHistory().contains(beaconHistory)) {
+//				siloHistory.getBeaconsHistory().stream().forEach(b -> {
+//					if(b.getBeacon().getId() == dto.getBeaconId()) {
+//						b.setHumidity(dto.getHumidity());
+//						b.setDistance(dto.getDistance());
+//						b.setTemperature(dto.getTemperature());
+//						beaconHistoryRepository.save(b);
+//					}
+//				});
+//			}
+//		}
 	}
 }

@@ -30,9 +30,7 @@ public class SiloController {
 
 	@RequestMapping(path = "/silos/history", produces = "application/json", method = RequestMethod.GET)
 	public List<SiloHistory> getSilosHistory() {
-		List<SiloHistory> silos = siloHistoryRepository.findAll();
-		SiloHistory siloHistory = silos.get(0);
-		return silos;
+		return siloHistoryRepository.findAll();
 	}
 
 	@RequestMapping(path = "/silos/history/closed", produces = "application/json", method = RequestMethod.GET)

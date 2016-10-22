@@ -1,5 +1,7 @@
 package com.graincare.beacon;
 
+import java.util.Objects;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -81,5 +83,15 @@ public class BeaconHistory {
 	public void setHumidity(Double humidity) {
 		this.humidity = humidity;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!(obj instanceof BeaconHistory))
+			return false;
 
+		BeaconHistory other = (BeaconHistory) obj;
+		return Objects.equals(this.getBeacon(), other.getBeacon());
+	}
 }

@@ -35,6 +35,7 @@ public class SiloHistory {
 	@JsonManagedReference
 	private List<BeaconHistory> beaconsHistory;
 	@Column(name = "opened_at")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
 	private Calendar openedAt;
 	@Column(name = "closed_at")
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
