@@ -71,6 +71,7 @@ public class BeaconController {
 	@RequestMapping(path = "/beacon/history", method = RequestMethod.POST)
 	public void update(@RequestBody BeaconHistoryDTO dto) {
 		List<BeaconHistory> beaconsHistories = beaconHistoryRepository.findByBeaconId(dto.getBeaconId());
+		
 		if(beaconsHistories.size() == 0) {
 			throw new BeaconHistoryNotFoundException();
 		}
@@ -79,44 +80,14 @@ public class BeaconController {
 			return beaconHistory.getSiloHistory().getOpen() == false;
 		}).collect(Collectors.toList());
 			
-		if(openBeaconsHistories.size() > 1){
-			throw new RuntimeException("Fodeu a porra toda");
+		if (openBeaconsHistories.size() > 1 || openBeaconsHistories.isEmpty()) {
+			throw new InconsistentBeaconOnDatabaseException();
 		}
 		
-		//oww fuck
 		BeaconHistory beaconHistory = openBeaconsHistories.get(0);
 		beaconHistory.setHumidity(dto.getHumidity());
 		beaconHistory.setDistance(dto.getDistance());
 		beaconHistory.setTemperature(dto.getTemperature());
 		beaconHistoryRepository.save(beaconHistory);
-		
-		
-//		List<SiloHistory> allSiloHistories = new ArrayList<>();
-//		beaconsHistories.stream().forEach(b -> allSiloHistories.add(b.getSiloHistory()));
-//		
-//		List<SiloHistory> closedSiloHistories = allSiloHistories.stream().filter(silo -> {
-//			return silo.getOpen() == false;
-//		}).collect(Collectors.toList());
-//		
-//		if(closedSiloHistories.size() > 1) {
-//			throw new RuntimeException("Fodeu a porra toda");
-//		}
-//		
-//		
-//		BeaconHistory beaconHistory = new BeaconHistory();
-		
-		
-//		for (SiloHistory siloHistory : closedSiloHistories) {
-//			if (siloHistory.getBeaconsHistory().contains(beaconHistory)) {
-//				siloHistory.getBeaconsHistory().stream().forEach(b -> {
-//					if(b.getBeacon().getId() == dto.getBeaconId()) {
-//						b.setHumidity(dto.getHumidity());
-//						b.setDistance(dto.getDistance());
-//						b.setTemperature(dto.getTemperature());
-//						beaconHistoryRepository.save(b);
-//					}
-//				});
-//			}
-//		}
 	}
 }
