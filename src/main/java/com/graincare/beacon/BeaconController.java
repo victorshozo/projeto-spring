@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.graincare.exceptions.BeaconHistoryNotFoundException;
 import com.graincare.exceptions.SiloNotFoundException;
+import com.graincare.mail.SmtpEmailSender;
 import com.graincare.silos.SiloHistory;
 import com.graincare.silos.SiloHistoryRepository;
 
@@ -26,6 +28,10 @@ public class BeaconController {
 	private BeaconHistoryRepository beaconHistoryRepository;
 	@Autowired
 	private SiloHistoryRepository siloHistoryRepository;
+	@Autowired
+	private SmtpEmailSender emailSender;
+	@Value("${notification.email}")
+	private String emailToSendNotification;
 
 	@RequestMapping(path = "/beacons/history", produces = "application/json", method = RequestMethod.GET)
 	public List<BeaconHistory> getBeaconHistory() {
@@ -89,5 +95,26 @@ public class BeaconController {
 		beaconHistory.setDistance(dto.getDistance());
 		beaconHistory.setTemperature(dto.getTemperature());
 		beaconHistoryRepository.save(beaconHistory);
+		
+		Double grainMaxTemperature = beaconHistory.getSiloHistory().getGrao().getMaxTemperature();
+		if (dto.getTemperature() > grainMaxTemperature) {
+			String region = beaconHistory.getSiloHistory().getSilo().getRegion();
+			String grao = beaconHistory.getSiloHistory().getGrao().getType();
+
+			StringBuilder message = new StringBuilder();
+			message.append("<span style='font-size:2em'>");
+			message.append("Atenção!<br/>O silo que está com <b>" + grao + "</b> ");
+			message.append("na região: <b>" + region + "</b> ");
+			message.append(", está com a temperatura de " + dto.getTemperature() + " graus");
+			message.append(", sendo que sua temperatura máxima é de: " + grainMaxTemperature + " graus");
+			message.append("</span>");
+			
+			//TODO pegar esse email do login do usuario
+			emailSender.to(emailToSendNotification)
+					.withSubject("Atenção, silo com temperatura acima do normal")
+					.withMessage(message.toString())
+					.send();
+		}
+		
 	}
 }

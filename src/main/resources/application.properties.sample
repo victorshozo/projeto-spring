@@ -4,3 +4,12 @@ db.username=root
 db.password=
 
 hibernate.show_sql=false
+
+email.hostname=smtp.gmail.com
+email.port=465
+email.name=Grain Care
+email.username=graincare@gmail.com
+email.password=
+email.debug=false
+
+notification.email=andrade.rmn+grain-care@gmail.com
