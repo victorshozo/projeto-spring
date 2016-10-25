@@ -80,11 +80,16 @@ public class BeaconController {
 			return beaconHistory.getSiloHistory().getOpen() == false;
 		}).collect(Collectors.toList());
 			
-		if (openBeaconsHistories.size() > 1 || openBeaconsHistories.isEmpty()) {
+		if (openBeaconsHistories.isEmpty()) {
 			throw new InconsistentBeaconOnDatabaseException();
 		}
 		
-		BeaconHistory beaconHistory = openBeaconsHistories.get(0);
+		SiloHistory siloHistory = openBeaconsHistories.get(0).getSiloHistory();
+		Beacon beacon = openBeaconsHistories.get(0).getBeacon();
+		
+		BeaconHistory beaconHistory = new BeaconHistory();
+		beaconHistory.setSiloHistory(siloHistory);
+		beaconHistory.setBeacon(beacon);
 		beaconHistory.setHumidity(dto.getHumidity());
 		beaconHistory.setDistance(dto.getDistance());
 		beaconHistory.setTemperature(dto.getTemperature());
