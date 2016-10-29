@@ -1,5 +1,6 @@
 package com.graincare.beacon;
 
+import java.util.Calendar;
 import java.util.Objects;
 
 import javax.persistence.Column;
@@ -35,6 +36,8 @@ public class BeaconHistory {
 	private Double distance;
 	@Column(name = "humidity")
 	private Double humidity;
+	@Column(name = "updated_at")
+	private Calendar updatedAt = Calendar.getInstance();
 
 	public Long getId() {
 		return id;
@@ -83,7 +86,15 @@ public class BeaconHistory {
 	public void setHumidity(Double humidity) {
 		this.humidity = humidity;
 	}
-	
+
+	public Calendar getUpdatedAt() {
+		return updatedAt;
+	}
+
+	public void setUpdatedAt(Calendar updatedAt) {
+		this.updatedAt = updatedAt;
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
