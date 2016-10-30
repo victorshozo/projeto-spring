@@ -1,5 +1,7 @@
 package com.graincare.silos;
 
+import java.math.BigDecimal;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.graincare.beacon.Beacon;
+import com.graincare.beacon.BeaconAvarage;
 import com.graincare.beacon.BeaconHistory;
 import com.graincare.beacon.BeaconHistoryRepository;
 import com.graincare.exceptions.SiloHistoryNotFoundException;
@@ -27,6 +30,8 @@ public class SiloController {
 	private SiloRepository siloRepository;
 	@Autowired
 	private BeaconHistoryRepository beaconHistoryRepository;
+	@Autowired
+	private SiloPredictionDateCalculator siloPredictionDateCalculator;
 
 	@RequestMapping(path = "/silos/history", produces = "application/json", method = RequestMethod.GET)
 	public List<SiloHistory> getSilosHistory() {
@@ -123,15 +128,28 @@ public class SiloController {
 		if (!optionalSiloHistory.isPresent()) {
 			throw new SiloHistoryNotFoundException();
 		}
-		
 		SiloHistory siloHistory = optionalSiloHistory.get();
+		
+		List<BeaconAvarage> avarages = new ArrayList<>();
+		List<Object[]> results = beaconHistoryRepository.getListOfAvarageTemperatureAndHumidityFor(siloHistory.getId());
+		results.forEach(result -> {
+			BeaconAvarage avarage = getBeaconAvarage(result);
+			avarages.add(avarage);
+		});
+		
+		Calendar predictionDate = siloPredictionDateCalculator.calculate(siloHistory, avarages);
+		return new PredictionSiloDTO(predictionDate);
+	}
 
-		Calendar closedAt = siloHistory.getClosedAt();
-		closedAt.add(Calendar.DATE, 21);
+	private BeaconAvarage getBeaconAvarage(Object[] result) {
+		Calendar date = Calendar.getInstance();
+		date.setTimeInMillis(((Date) result[0]).getTime());
 		
-		PredictionSiloDTO predictionDTO = new PredictionSiloDTO();
-		predictionDTO.setDate(closedAt);
+		int quantityOfTemperatures = ((BigDecimal) result[1]).intValue();
+		Double avarageTemperature = (Double) result[2];
+		Double avarageHumidity = (Double) result[3];
 		
-		return predictionDTO;
+		BeaconAvarage avarage = new BeaconAvarage(date, quantityOfTemperatures, avarageTemperature, avarageHumidity);
+		return avarage;
 	}
 }
