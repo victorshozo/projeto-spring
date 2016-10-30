@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -70,12 +71,21 @@ public class SiloController {
 		}
 		SiloHistory siloHistory = optionalSiloHistory.get();
 
+		List<BeaconHistory> beaconsHistories = siloHistory.getBeaconsHistory().stream().filter(b -> {
+			return b.getHumidity() == null && b.getTemperature() == null;
+		}).collect(Collectors.toList());
+				
+		BeaconHistory beaconHistory = new BeaconHistory();
+		beaconHistory.setUpdatedAt(null);
+		for (BeaconHistory b : beaconsHistories) {
+			if(b.getUpdatedAt().after(beaconHistory.getUpdatedAt()) || beaconHistory.getUpdatedAt() == null) {
+				beaconHistory = b;
+			}			
+		}
+		
 		Double siloFullPercent = 0.0;
-
-		for (BeaconHistory beaconHistory : siloHistory.getBeaconsHistory()) {
-			if (beaconHistory.getDistance() != null) {
-				siloFullPercent = (beaconHistory.getDistance() * 100.0) / siloHistory.getSilo().getSize();
-			}
+		if (beaconHistory.getDistance() != null) {
+			siloFullPercent = (beaconHistory.getDistance() * 100.0) / siloHistory.getSilo().getSize();
 		}
 
 		return siloFullPercent;
