@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.graincare.beacon.Beacon;
-import com.graincare.beacon.BeaconAvarage;
+import com.graincare.beacon.BeaconAverage;
 import com.graincare.beacon.BeaconHistory;
 import com.graincare.beacon.BeaconHistoryRepository;
 import com.graincare.exceptions.SiloHistoryNotFoundException;
@@ -130,26 +130,26 @@ public class SiloController {
 		}
 		SiloHistory siloHistory = optionalSiloHistory.get();
 		
-		List<BeaconAvarage> avarages = new ArrayList<>();
-		List<Object[]> results = beaconHistoryRepository.getListOfAvarageTemperatureAndHumidityFor(siloHistory.getId());
+		List<BeaconAverage> averages = new ArrayList<>();
+		List<Object[]> results = beaconHistoryRepository.getListOfAverageTemperatureAndHumidityFor(siloHistory.getId());
 		results.forEach(result -> {
-			BeaconAvarage avarage = getBeaconAvarage(result);
-			avarages.add(avarage);
+			BeaconAverage average = getBeaconAverage(result);
+			averages.add(average);
 		});
 		
-		Calendar predictionDate = siloPredictionDateCalculator.calculate(siloHistory, avarages);
+		Calendar predictionDate = siloPredictionDateCalculator.calculate(siloHistory, averages);
 		return new PredictionSiloDTO(predictionDate);
 	}
 
-	private BeaconAvarage getBeaconAvarage(Object[] result) {
+	private BeaconAverage getBeaconAverage(Object[] result) {
 		Calendar date = Calendar.getInstance();
 		date.setTimeInMillis(((Date) result[0]).getTime());
 		
 		int quantityOfTemperatures = ((BigDecimal) result[1]).intValue();
-		Double avarageTemperature = (Double) result[2];
-		Double avarageHumidity = (Double) result[3];
+		Double averageTemperature = (Double) result[2];
+		Double averageHumidity = (Double) result[3];
 		
-		BeaconAvarage avarage = new BeaconAvarage(date, quantityOfTemperatures, avarageTemperature, avarageHumidity);
-		return avarage;
+		BeaconAverage average = new BeaconAverage(date, quantityOfTemperatures, averageTemperature, averageHumidity);
+		return average;
 	}
 }
