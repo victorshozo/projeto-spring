@@ -9,34 +9,31 @@ import com.graincare.beacon.BeaconAverage;
 
 @Service
 public class SiloPredictionDateCalculator {
-	
+
 	private static final int DEFAULT_DAYS_TO_OPEN = 21;
 
 	public Calendar calculate(SiloHistory siloHistory, List<BeaconAverage> averages) {
-		Double averageTemperature = 0.0;
-		Double averageHumidity = 0.0;
-		for (BeaconAverage average : averages) {
-			averageTemperature += average.getAverageTemperature();
-			averageHumidity += average.getAverageHumidity();
+		int daysPerDegree = siloHistory.getGrao().getDaysPerDegree();
+		double maxHumidity = siloHistory.getGrao().getMaxHumidity();
+		double maxTemperature = siloHistory.getGrao().getMaxTemperature();
+		int daysToRemove = 0;
+
+		for (BeaconAverage beaconAverage : averages) {
+			if (beaconAverage.getAverageHumidity() > maxHumidity 
+					|| beaconAverage.getAverageTemperature() > maxTemperature) {
+				int leftoverDegrees = (int) (beaconAverage.getAverageTemperature() - maxTemperature);
+				if(leftoverDegrees > 0) {
+					daysToRemove += (leftoverDegrees * daysPerDegree);
+				}
+			}
 		}
-		averageTemperature = (averageTemperature / averages.size());
-		averageHumidity = (averageHumidity / averages.size());
 		
-		Double maxTemperature = siloHistory.getGrao().getMaxTemperature();
-		Double maxHumidity = siloHistory.getGrao().getMaxHumidity();
+		if (daysToRemove > DEFAULT_DAYS_TO_OPEN) {
+			daysToRemove = DEFAULT_DAYS_TO_OPEN;
+		}
 		
 		Calendar predictionDate = siloHistory.getClosedAt();
-		if (averages.size() <= 1 || (averageTemperature <= maxTemperature && averageHumidity <= maxHumidity)) {
-			predictionDate.add(Calendar.DATE, DEFAULT_DAYS_TO_OPEN);
-		} else {
-			int leftoverDegrees = (int) (averageTemperature - maxTemperature);
-			leftoverDegrees = leftoverDegrees < 0 ? leftoverDegrees * -1 : leftoverDegrees;
-			
-			int daysPerDegree = siloHistory.getGrao().getDaysPerDegree();
-			
-			int daysToRemove = daysPerDegree * leftoverDegrees;
-			predictionDate.add(Calendar.DATE, DEFAULT_DAYS_TO_OPEN - daysToRemove);
-		}
+		predictionDate.add(Calendar.DATE, DEFAULT_DAYS_TO_OPEN - daysToRemove);
 		return predictionDate;
 	}
 }
