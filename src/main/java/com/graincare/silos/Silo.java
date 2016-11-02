@@ -14,8 +14,6 @@ public class Silo {
 	@Id
 	@GeneratedValue
 	private Long id;
-	@Column(name = "capacity")
-	private Double capacity;
 	@Column(name = "region")
 	private String region;
 	@Column(name = "size")
@@ -29,20 +27,12 @@ public class Silo {
 		return id;
 	}
 
-	public Double getCapacity() {
-		return capacity;
-	}
-
 	public String getRegion() {
 		return region;
 	}
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public void setCapacity(Double capacity) {
-		this.capacity = capacity;
 	}
 
 	public void setRegion(String region) {

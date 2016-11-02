@@ -150,7 +150,47 @@ public class SiloController {
 		Calendar predictionDate = siloPredictionDateCalculator.calculate(siloHistory, averages);
 		return new PredictionSiloDTO(predictionDate);
 	}
-
+	
+	@RequestMapping(path = "/silo/{siloId}/report", method = RequestMethod.GET)
+	public SiloReportDTO getReport(@PathVariable Long siloId){
+		Calendar date = Calendar.getInstance();
+		date.add(Calendar.MONTH, -3);
+		
+		List<SiloReport> siloReports = new ArrayList<>();
+		
+		siloHistoryRepository.generateReportFor(siloId).forEach(result -> {
+			SiloReport siloReport = new SiloReport();
+			
+			Calendar closedAt = Calendar.getInstance();
+			date.setTimeInMillis(((Date) result[0]).getTime());
+			siloReport.setClosedAt(closedAt);
+			
+			Calendar openAt = Calendar.getInstance();
+			date.setTimeInMillis(((Date) result[1]).getTime());
+			siloReport.setOpenAt(openAt);
+			
+			siloReport.setGrain((String) result[2]);
+			siloReport.setAverageTemperature((Double) result[3]);
+			siloReport.setAverageHumidity((Double) result[4]);
+			siloReport.setCapacityPercentUsed((Double) result[5]);
+			
+			siloReports.add(siloReport);
+		});
+		
+		Double siloCapacityUse = 0.0;
+		for (SiloReport siloReport : siloReports) {
+			siloCapacityUse += siloReport.getCapacityPercentUsed();
+		}
+		siloCapacityUse = siloCapacityUse / siloReports.size();
+		
+		SiloReportDTO siloReportDTO = new SiloReportDTO();
+		siloReportDTO.setSiloId(siloId);
+		siloReportDTO.setSiloCapacityUse(siloCapacityUse);
+		siloReportDTO.setData(siloReports);
+		
+		return siloReportDTO;
+	}
+	
 	private BeaconAverage getBeaconAverage(Object[] result) {
 		Calendar date = Calendar.getInstance();
 		date.setTimeInMillis(((Date) result[0]).getTime());
