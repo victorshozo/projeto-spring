@@ -8,12 +8,11 @@ import org.springframework.data.repository.RepositoryDefinition;
 @RepositoryDefinition(domainClass = SiloHistory.class, idClass = Long.class)
 public interface SiloHistoryRepository {
 
-	List<SiloHistory> findAll();
+	List<SiloHistory> findBySiloFarmUserId(Long userId);
 	
-	List<SiloHistory> findAllByOpenFalse();
+	List<SiloHistory> findByOpenFalseAndSiloFarmUserId(Long userId);
 
-	Optional<SiloHistory> findBySiloIdAndOpenFalse(Long siloId);
+	Optional<SiloHistory> findBySiloIdAndOpenFalseAndSiloFarmUserId(Long siloId, Long userId);
 
 	SiloHistory save(SiloHistory siloHistory);
-
 }

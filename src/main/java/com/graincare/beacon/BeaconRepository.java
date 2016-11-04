@@ -7,6 +7,8 @@ import org.springframework.data.repository.RepositoryDefinition;
 @RepositoryDefinition(domainClass = Beacon.class, idClass = Long.class)
 public interface BeaconRepository {
 
-	List<Beacon> findAll();
+	List<Beacon> findByFarmUserId(Long userId);
+	
+	List<Beacon> findByFarmUserIdAndIdIn(Long userId, List<Long> ids);
 	
 }
