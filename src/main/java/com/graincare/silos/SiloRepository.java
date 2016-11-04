@@ -8,8 +8,7 @@ import org.springframework.data.repository.RepositoryDefinition;
 @RepositoryDefinition(domainClass = Silo.class, idClass = Long.class)
 public interface SiloRepository {
 
-	List<Silo> findAll();
+	List<Silo> findByFarmUserId(Long userId);
 
-	Optional<Silo> findById(Long id);
-
+	Optional<Silo> findByIdAndFarmUserId(Long id, Long userId);
 }

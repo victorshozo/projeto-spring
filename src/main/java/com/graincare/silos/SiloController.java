@@ -1,7 +1,5 @@
 package com.graincare.silos;
 
-import java.math.BigDecimal;
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -17,10 +15,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.graincare.beacon.Beacon;
 import com.graincare.beacon.BeaconAverage;
+import com.graincare.beacon.BeaconAverageService;
 import com.graincare.beacon.BeaconHistory;
 import com.graincare.beacon.BeaconHistoryRepository;
+import com.graincare.beacon.BeaconNotFoundException;
+import com.graincare.beacon.BeaconRepository;
 import com.graincare.exceptions.SiloHistoryNotFoundException;
 import com.graincare.exceptions.SiloNotFoundException;
+import com.graincare.user.LoggedUser;
 
 @RestController
 public class SiloController {
@@ -32,24 +34,30 @@ public class SiloController {
 	@Autowired
 	private BeaconHistoryRepository beaconHistoryRepository;
 	@Autowired
+	private BeaconRepository beaconRepository;
+	@Autowired
 	private SiloPredictionDateCalculator siloPredictionDateCalculator;
+	@Autowired
+	private BeaconAverageService beaconAverageService;
+	@Autowired
+	private LoggedUser loggedUser;
 
 	@RequestMapping(path = "/silos/history", produces = "application/json", method = RequestMethod.GET)
 	public List<SiloHistory> getSilosHistory() {
-		return siloHistoryRepository.findAll();
+		return siloHistoryRepository.findBySiloFarmUserId(loggedUser.get().getId());
 	}
 
 	@RequestMapping(path = "/silos/history/closed", produces = "application/json", method = RequestMethod.GET)
 	public List<SiloHistory> getClosedSilosHistory() {
-		return siloHistoryRepository.findAllByOpenFalse();
+		return siloHistoryRepository.findByOpenFalseAndSiloFarmUserId(loggedUser.get().getId());
 	}
 
 	@RequestMapping(path = "/silos/available", produces = "application/json", method = RequestMethod.GET)
 	public List<Silo> getOpenSilos() {
-		List<Silo> allSilos = siloRepository.findAll();
+		List<Silo> allSilos = siloRepository.findByFarmUserId(loggedUser.get().getId());
 
 		List<Silo> closedSilos = new ArrayList<>();
-		siloHistoryRepository.findAllByOpenFalse().stream().forEach(s -> {
+		siloHistoryRepository.findByOpenFalseAndSiloFarmUserId(loggedUser.get().getId()).stream().forEach(s -> {
 			closedSilos.add(s.getSilo());
 		});
 
@@ -65,7 +73,8 @@ public class SiloController {
 
 	@RequestMapping(path = "/silo/{siloId}/capacity", method = RequestMethod.GET)
 	public Double getSiloCapacity(@PathVariable Long siloId) {
-		Optional<SiloHistory> optionalSiloHistory = siloHistoryRepository.findBySiloIdAndOpenFalse(siloId);
+		Optional<SiloHistory> optionalSiloHistory = siloHistoryRepository
+				.findBySiloIdAndOpenFalseAndSiloFarmUserId(siloId, loggedUser.get().getId());
 		if (!optionalSiloHistory.isPresent()) {
 			throw new SiloNotFoundException();
 		}
@@ -74,15 +83,15 @@ public class SiloController {
 		List<BeaconHistory> beaconsHistories = siloHistory.getBeaconsHistory().stream().filter(b -> {
 			return b.getHumidity() == null && b.getTemperature() == null;
 		}).collect(Collectors.toList());
-				
+
 		BeaconHistory beaconHistory = new BeaconHistory();
 		beaconHistory.setUpdatedAt(null);
 		for (BeaconHistory b : beaconsHistories) {
-			if(b.getUpdatedAt().after(beaconHistory.getUpdatedAt()) || beaconHistory.getUpdatedAt() == null) {
+			if (b.getUpdatedAt().after(beaconHistory.getUpdatedAt()) || beaconHistory.getUpdatedAt() == null) {
 				beaconHistory = b;
-			}			
+			}
 		}
-		
+
 		Double siloFullPercent = 0.0;
 		if (beaconHistory.getDistance() != null) {
 			siloFullPercent = (beaconHistory.getDistance() * 100.0) / siloHistory.getSilo().getSize();
@@ -93,12 +102,13 @@ public class SiloController {
 
 	@RequestMapping(path = "/silos", produces = "application/json", method = RequestMethod.GET)
 	public List<Silo> getSilos() {
-		return siloRepository.findAll();
+		return siloRepository.findByFarmUserId(loggedUser.get().getId());
 	}
 
 	@RequestMapping(path = "/silo/{siloId}/open", method = RequestMethod.POST)
 	public void openSilo(@PathVariable Long siloId) {
-		Optional<SiloHistory> optionalSiloHistory = siloHistoryRepository.findBySiloIdAndOpenFalse(siloId);
+		Optional<SiloHistory> optionalSiloHistory = siloHistoryRepository
+				.findBySiloIdAndOpenFalseAndSiloFarmUserId(siloId, loggedUser.get().getId());
 		if (!optionalSiloHistory.isPresent()) {
 			throw new SiloHistoryNotFoundException();
 		}
@@ -111,10 +121,22 @@ public class SiloController {
 
 	@RequestMapping(path = "/silo/history", method = RequestMethod.POST)
 	public void createSiloHistory(@RequestBody SiloHistoryDTO dto) {
-		Optional<Silo> optionalSilo = siloRepository.findById(dto.getSiloId());
+		Long userId = loggedUser.get().getId();
+
+		Optional<Silo> optionalSilo = siloRepository.findByIdAndFarmUserId(dto.getSiloId(), userId);
 		if (!optionalSilo.isPresent()) {
 			throw new SiloNotFoundException();
 		}
+
+		if (siloHistoryRepository.findBySiloIdAndOpenFalseAndSiloFarmUserId(dto.getSiloId(), userId).isPresent()) {
+			throw new SiloAlreadyInUseFoundException();
+		}
+
+		List<Beacon> beacons = beaconRepository.findByFarmUserIdAndIdIn(userId, dto.getBeaconsId());
+		if (beacons.size() != dto.getBeaconsId().size()) {
+			throw new BeaconNotFoundException();
+		}
+
 		SiloHistory siloHistory = new SiloHistory();
 		siloHistory.setClosedAt(Calendar.getInstance());
 		siloHistory.setGrao(dto.getGrainType());
@@ -122,44 +144,32 @@ public class SiloController {
 		siloHistory.setSilo(optionalSilo.get());
 		siloHistoryRepository.save(siloHistory);
 
-		for (Long beaconId : dto.getBeaconsId()) {
-			Beacon beacon = new Beacon(beaconId);
-			
+		beacons.forEach(beacon -> {
 			BeaconHistory beaconHistory = new BeaconHistory();
 			beaconHistory.setBeacon(beacon);
 			beaconHistory.setSiloHistory(siloHistory);
 			beaconHistoryRepository.save(beaconHistory);
-		}
+		});
 	}
 
-	@RequestMapping(path = "/silo/{siloId}/prediction", method = RequestMethod.GET)	
+	@RequestMapping(path = "/silo/{siloId}/prediction", method = RequestMethod.GET)
 	public PredictionSiloDTO getPrediction(@PathVariable Long siloId) {
-		Optional<SiloHistory> optionalSiloHistory = siloHistoryRepository.findBySiloIdAndOpenFalse(siloId);
+		Optional<SiloHistory> optionalSiloHistory = siloHistoryRepository
+				.findBySiloIdAndOpenFalseAndSiloFarmUserId(siloId, loggedUser.get().getId());
 		if (!optionalSiloHistory.isPresent()) {
 			throw new SiloHistoryNotFoundException();
 		}
 		SiloHistory siloHistory = optionalSiloHistory.get();
-		
+
 		List<BeaconAverage> averages = new ArrayList<>();
 		List<Object[]> results = beaconHistoryRepository.getListOfAverageTemperatureAndHumidityFor(siloHistory.getId());
 		results.forEach(result -> {
-			BeaconAverage average = getBeaconAverage(result);
+			BeaconAverage average = beaconAverageService.getBeaconAverageFor(result);
 			averages.add(average);
 		});
-		
+
 		Calendar predictionDate = siloPredictionDateCalculator.calculate(siloHistory, averages);
 		return new PredictionSiloDTO(predictionDate);
 	}
 
-	private BeaconAverage getBeaconAverage(Object[] result) {
-		Calendar date = Calendar.getInstance();
-		date.setTimeInMillis(((Date) result[0]).getTime());
-		
-		int quantityOfTemperatures = ((BigDecimal) result[1]).intValue();
-		Double averageTemperature = (Double) result[2];
-		Double averageHumidity = (Double) result[3];
-		
-		BeaconAverage average = new BeaconAverage(date, quantityOfTemperatures, averageTemperature, averageHumidity);
-		return average;
-	}
 }

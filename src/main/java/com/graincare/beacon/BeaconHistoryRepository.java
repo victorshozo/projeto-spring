@@ -8,13 +8,13 @@ import org.springframework.data.repository.query.Param;
 
 @RepositoryDefinition(domainClass = BeaconHistory.class, idClass = Long.class)
 public interface BeaconHistoryRepository {
-
-	List<BeaconHistory> findAll();
+	
+	BeaconHistory save(BeaconHistory beaconHistory);
+	
+	List<BeaconHistory> findByBeaconFarmUserId(Long userId);
 
 	List<BeaconHistory> findByBeaconId(Long beaconId);
-
-	BeaconHistory save(BeaconHistory beaconHistory);
-
+	
 	@Query(value = "select date(b.`updated_at`) as date, " 
 					+ " sum(1) as quantity,"
 					+ " sum(b.`temperature`) / sum(1) as averageTemperature,"
@@ -25,6 +25,4 @@ public interface BeaconHistoryRepository {
 					+ " and b.`temperature` is not null "
 					+ " group by date(b.`updated_at`)", nativeQuery = true)
 	List<Object[]> getListOfAverageTemperatureAndHumidityFor(@Param("siloHistoryId") Long siloHistoryId);
-	
-
 }

@@ -6,7 +6,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,10 +13,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.graincare.exceptions.BeaconHistoryNotFoundException;
-import com.graincare.exceptions.SiloNotFoundException;
+import com.graincare.exceptions.InconsistentBeaconOnDatabaseException;
+import com.graincare.exceptions.SiloHistoryNotFoundException;
 import com.graincare.mail.SmtpEmailSender;
 import com.graincare.silos.SiloHistory;
 import com.graincare.silos.SiloHistoryRepository;
+import com.graincare.user.LoggedUser;
 
 @RestController
 public class BeaconController {
@@ -29,27 +30,27 @@ public class BeaconController {
 	@Autowired
 	private SiloHistoryRepository siloHistoryRepository;
 	@Autowired
+	private LoggedUser loggedUser;
+	@Autowired
 	private SmtpEmailSender emailSender;
-	@Value("${notification.email}")
-	private String emailToSendNotification;
 
 	@RequestMapping(path = "/beacons/history", produces = "application/json", method = RequestMethod.GET)
 	public List<BeaconHistory> getBeaconHistory() {
-		return beaconHistoryRepository.findAll();
+		return beaconHistoryRepository.findByBeaconFarmUserId(loggedUser.get().getId());
 	}
 
 	@RequestMapping(path = "/beacons", produces = "application/json", method = RequestMethod.GET)
 	public List<Beacon> getBeacon() {
-		return beaconRepository.findAll();
+		return beaconRepository.findByFarmUserId(loggedUser.get().getId());
 	}
 
 	@RequestMapping(path = "/beacons/silo/{siloId}", produces = "application/json", method = RequestMethod.GET)
 	public List<BeaconHistory> getBeaconsFor(@PathVariable Long siloId) {
-		Optional<SiloHistory> optionalSiloHistory = siloHistoryRepository.findBySiloIdAndOpenFalse(siloId);
+		Optional<SiloHistory> optionalSiloHistory = siloHistoryRepository
+				.findBySiloIdAndOpenFalseAndSiloFarmUserId(siloId, loggedUser.get().getId());
 		if (!optionalSiloHistory.isPresent()) {
-			throw new SiloNotFoundException();
+			throw new SiloHistoryNotFoundException();
 		}
-
 		SiloHistory siloHistory = optionalSiloHistory.get();
 
 		return siloHistory.getBeaconsHistory();
@@ -57,10 +58,11 @@ public class BeaconController {
 
 	@RequestMapping(path = "/beacons/available", produces = "application/json", method = RequestMethod.GET)
 	public List<Beacon> getAvailableBeacons() {
-		List<Beacon> allBeacons = beaconRepository.findAll();
+		Long userId = loggedUser.get().getId();
+		List<Beacon> allBeacons = beaconRepository.findByFarmUserId(userId);
 
 		List<Beacon> unavailableBeacons = new ArrayList<>();
-		siloHistoryRepository.findAllByOpenFalse().forEach(s -> {
+		siloHistoryRepository.findByOpenFalseAndSiloFarmUserId(userId).forEach(s -> {
 			s.getBeaconsHistory().forEach(b -> unavailableBeacons.add(b.getBeacon()));
 		});
 
@@ -77,22 +79,22 @@ public class BeaconController {
 	@RequestMapping(path = "/beacon/history", method = RequestMethod.POST)
 	public void update(@RequestBody BeaconHistoryDTO dto) {
 		List<BeaconHistory> beaconsHistories = beaconHistoryRepository.findByBeaconId(dto.getBeaconId());
-		
-		if(beaconsHistories.size() == 0) {
+
+		if (beaconsHistories.size() == 0) {
 			throw new BeaconHistoryNotFoundException();
 		}
-		
+
 		List<BeaconHistory> openBeaconsHistories = beaconsHistories.stream().filter(beaconHistory -> {
 			return beaconHistory.getSiloHistory().getOpen() == false;
 		}).collect(Collectors.toList());
-			
+
 		if (openBeaconsHistories.isEmpty()) {
 			throw new InconsistentBeaconOnDatabaseException();
 		}
-		
+
 		SiloHistory siloHistory = openBeaconsHistories.get(0).getSiloHistory();
 		Beacon beacon = openBeaconsHistories.get(0).getBeacon();
-		
+
 		BeaconHistory beaconHistory = new BeaconHistory();
 		beaconHistory.setSiloHistory(siloHistory);
 		beaconHistory.setBeacon(beacon);
@@ -100,26 +102,26 @@ public class BeaconController {
 		beaconHistory.setDistance(dto.getDistance());
 		beaconHistory.setTemperature(dto.getTemperature());
 		beaconHistoryRepository.save(beaconHistory);
-		
+
 		Double grainMaxTemperature = beaconHistory.getSiloHistory().getGrao().getMaxTemperature();
 		if (dto.getTemperature() > grainMaxTemperature) {
-			String region = beaconHistory.getSiloHistory().getSilo().getRegion();
-			String grao = beaconHistory.getSiloHistory().getGrao().getType();
+			String region = siloHistory.getSilo().getRegion();
+			String grao = siloHistory.getGrao().getType();
+			String email = siloHistory.getSilo().getFarm().getUser().getEmail();
+			String farmName = siloHistory.getSilo().getFarm().getName();
 
 			StringBuilder message = new StringBuilder();
 			message.append("<span style='font-size:2em'>");
 			message.append("Atenção!<br/>O silo que está com <b>" + grao + "</b> ");
-			message.append("na região: <b>" + region + "</b> ");
+			message.append("na região: <b>" + region + "</b>, na fazenda: <b>" + farmName + "</b>");
 			message.append(", está com a temperatura de " + dto.getTemperature() + " graus");
-			message.append(", sendo que sua temperatura máxima é de: " + grainMaxTemperature + " graus");
+			message.append(", sendo que sua temperatura máxima é de: " + grainMaxTemperature + " graus.");
 			message.append("</span>");
-			
-			//TODO pegar esse email do login do usuario
-			emailSender.to(emailToSendNotification)
-					.withSubject("Atenção, silo com temperatura acima do normal")
+
+			emailSender.to(email)
+					.withSubject("ATENÇÃO, silo com temperatura acima do normal!")
 					.withMessage(message.toString())
 					.send();
 		}
-		
 	}
 }

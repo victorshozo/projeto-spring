@@ -2,12 +2,17 @@ package com.graincare.user;
 
 import static java.util.Arrays.asList;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -17,6 +22,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCrypt;
+
+import com.graincare.farm.Farm;
 
 
 @Entity
@@ -36,9 +43,13 @@ public class User implements UserDetails {
 	@Column(name = "password", nullable = false)
 	private String password;
 	
-	public User(String email, String password) {
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user", fetch = FetchType.EAGER)
+	private List<Farm> farms = new ArrayList<>();
+	
+	public User(String email, String password, List<Farm> farms) {
 		this.password = password;
 		this.email = email;
+		this.farms = farms;
 	}
 	
 	@Deprecated
@@ -72,6 +83,14 @@ public class User implements UserDetails {
 	
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	
+	public List<Farm> getFarms() {
+		return farms;
+	}
+	
+	public void setFarms(List<Farm> farms) {
+		this.farms = farms;
 	}
 	
 	@Override
