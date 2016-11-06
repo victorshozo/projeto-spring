@@ -2,15 +2,18 @@ package com.graincare.silos;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.graincare.beacon.Beacon;
@@ -41,7 +44,9 @@ public class SiloController {
 	private BeaconAverageService beaconAverageService;
 	@Autowired
 	private LoggedUser loggedUser;
-
+	@Autowired
+	private SiloReportGenerator siloReportGenerator;
+	
 	@RequestMapping(path = "/silos/history", produces = "application/json", method = RequestMethod.GET)
 	public List<SiloHistory> getSilosHistory() {
 		return siloHistoryRepository.findBySiloFarmUserId(loggedUser.get().getId());
@@ -171,5 +176,21 @@ public class SiloController {
 		Calendar predictionDate = siloPredictionDateCalculator.calculate(siloHistory, averages);
 		return new PredictionSiloDTO(predictionDate);
 	}
-
+	
+	@RequestMapping(path = "/silos/{siloId}/report", method = RequestMethod.GET)
+	public SiloReportDTO getReport(@PathVariable Long siloId,
+			@RequestParam @DateTimeFormat(pattern = "dd/MM/yyyy") Date startDate,
+			@RequestParam @DateTimeFormat(pattern = "dd/MM/yyyy") Date endDate) {
+		Optional<Silo> silo = siloRepository.findByIdAndFarmUserId(siloId, loggedUser.get().getId());
+		if(!silo.isPresent()) {
+			throw new SiloNotFoundException();
+		}
+		
+		List<Object[]> results = siloHistoryRepository.generateReportFor(siloId, startDate, endDate);
+		SiloReportDTO siloReportDTO = siloReportGenerator.generateFor(silo.get(), results);
+		siloReportDTO.setReportStart(startDate);
+		siloReportDTO.setReportEnd(endDate);
+		
+		return siloReportDTO;
+	}
 }

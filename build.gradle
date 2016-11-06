@@ -32,7 +32,15 @@ dependencies {
     compile 'org.springframework.boot:spring-boot-starter-data-jpa'
     compile 'mysql:mysql-connector-java'
     compile 'com.fasterxml.jackson.datatype:jackson-datatype-hibernate4:2.8.0.rc1'
-    
+
+	compile 'org.apache.commons:commons-lang3:3.4'
+    compile 'org.jsoup:jsoup:1.9.1'
+    compile 'org.glassfish.jersey.core:jersey-client:2.23'
+	compile 'org.glassfish.jersey.media:jersey-media-moxy:2.22.2'
+	compile 'org.glassfish.jersey.media:jersey-media-json-jackson:2.23'
+	compile 'com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.7.4'
+    compile 'org.json:json:20160810'
+     
 	compile 'org.apache.commons:commons-email:1.4'
     compile 'org.springframework.security:spring-security-web'
     compile 'org.springframework.security:spring-security-config'
