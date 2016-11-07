@@ -46,14 +46,31 @@ public class BeaconController {
 
 	@RequestMapping(path = "/beacons/silo/{siloId}", produces = "application/json", method = RequestMethod.GET)
 	public List<BeaconHistory> getBeaconsFor(@PathVariable Long siloId) {
-		Optional<SiloHistory> optionalSiloHistory = siloHistoryRepository
-				.findBySiloIdAndOpenFalseAndSiloFarmUserId(siloId, loggedUser.get().getId());
-		if (!optionalSiloHistory.isPresent()) {
+		Long userId = loggedUser.get().getId();
+		Optional<SiloHistory> siloHistory = siloHistoryRepository
+				.findBySiloIdAndOpenFalseAndSiloFarmUserId(siloId, userId);
+		if (!siloHistory.isPresent()) {
 			throw new SiloHistoryNotFoundException();
 		}
-		SiloHistory siloHistory = optionalSiloHistory.get();
 
-		return siloHistory.getBeaconsHistory();
+		List<BeaconHistory> beaconsHistories = siloHistory.get().getBeaconsHistory()
+							.stream()
+							.filter(b -> b.getTemperature() != null && b.getHumidity() != null)
+							.collect(Collectors.toList());
+		
+		List<Long> beaconsIds = new ArrayList<>();
+		beaconsHistories.forEach(b -> {
+			if(!beaconsIds.contains(b.getBeacon().getId())){
+				beaconsIds.add(b.getBeacon().getId());
+			}
+		});
+				
+		List<BeaconHistory> result = new ArrayList<>();
+		beaconsIds.forEach(beaconId -> {
+			result.add(beaconHistoryRepository.findTopByBeaconFarmUserIdAndBeaconIdOrderByUpdatedAtDesc(userId, beaconId).get());
+		});
+		
+		return result;
 	}
 
 	@RequestMapping(path = "/beacons/available", produces = "application/json", method = RequestMethod.GET)

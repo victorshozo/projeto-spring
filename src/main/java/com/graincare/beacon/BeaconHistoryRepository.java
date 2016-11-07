@@ -1,6 +1,7 @@
 package com.graincare.beacon;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.RepositoryDefinition;
@@ -14,6 +15,8 @@ public interface BeaconHistoryRepository {
 	List<BeaconHistory> findByBeaconFarmUserId(Long userId);
 
 	List<BeaconHistory> findByBeaconId(Long beaconId);
+	
+	Optional<BeaconHistory> findTopByBeaconFarmUserIdAndBeaconIdOrderByUpdatedAtDesc(Long userId, Long beaconId);
 	
 	@Query(value = "select date(b.`updated_at`) as date, " 
 					+ " sum(1) as quantity,"
