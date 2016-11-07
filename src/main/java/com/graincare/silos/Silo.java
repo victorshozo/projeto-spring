@@ -24,6 +24,8 @@ public class Silo {
 	private String region;
 	@Column(name = "size")
 	private Double size = 30d;
+	@Column(name = "capacity")
+	private Double capacity;
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "farm_id", referencedColumnName = "id", nullable = false)
 	private Farm farm;
@@ -40,6 +42,14 @@ public class Silo {
 		return region;
 	}
 
+	public Double getSize() {
+		return size;
+	}
+	
+	public Double getCapacity() {
+		return capacity;
+	}
+
 	public void setId(Long id) {
 		this.id = id;
 	}
@@ -48,14 +58,14 @@ public class Silo {
 		this.region = region;
 	}
 
-	public Double getSize() {
-		return size;
-	}
-
 	public void setSize(Double size) {
 		this.size = size;
 	}
-	
+
+	public void setCapacity(Double capacity) {
+		this.capacity = capacity;
+	}
+
 	@JsonIgnore
 	public Farm getFarm() {
 		return farm;

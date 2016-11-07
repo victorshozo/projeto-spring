@@ -2,6 +2,10 @@ package com.graincare.configuration;
 
 import java.util.List;
 
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -34,5 +38,10 @@ class WebConfig extends WebMvcConfigurerAdapter {
 		converter.setObjectMapper(objectMapper);
 		converters.add(converter);
 		super.configureMessageConverters(converters);
+	}
+	
+	@Bean
+	Client client(){
+		return ClientBuilder.newBuilder().build();
 	}
 }
