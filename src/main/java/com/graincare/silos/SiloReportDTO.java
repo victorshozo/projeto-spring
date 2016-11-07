@@ -7,9 +7,9 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class SiloReportDTO {
 	private Long siloId;
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
 	private Date reportStart;
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
 	private Date reportEnd;
 	private String farmName;
 	private List<SiloReport> data;
