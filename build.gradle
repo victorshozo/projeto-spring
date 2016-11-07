@@ -40,6 +40,11 @@ dependencies {
 	compile 'org.glassfish.jersey.media:jersey-media-json-jackson:2.23'
 	compile 'com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.7.4'
     compile 'org.json:json:20160810'
+    
+    compile 'javax.mail:mail:1.4'
+    compile ('org.springframework.boot:spring-boot-starter-thymeleaf'){
+    	exclude module: 'spring-boot-starter-tomcat'
+    }
      
 	compile 'org.apache.commons:commons-email:1.4'
     compile 'org.springframework.security:spring-security-web'

@@ -18,7 +18,7 @@ public class SiloReportGenerator {
 	@Autowired
 	private GrainBagPriceDAO grainBagPriceDAO;
 
-	public SiloReportDTO generateFor(Silo silo, List<Object[]> results) {
+	public SiloReportDTO generateFor(Silo silo, List<Object[]> results, Date startDate, Date endDate) {
 		List<SiloReport> siloReports = new ArrayList<>();
 		Double totalAverageTemperature = 0.0;
 		Double totalAverageHumidity = 0.0;
@@ -27,11 +27,11 @@ public class SiloReportGenerator {
 		Double totalWeight = 0.0;
 		
 		for (Object[] result : results) {
-			Calendar openAt = Calendar.getInstance();
-			openAt.setTime(((Date) result[1]));
-			
 			Calendar closedAt = Calendar.getInstance();
-			openAt.setTime(((Date) result[2]));
+			closedAt.setTime((Date) result[1]);
+			
+			Calendar openAt = Calendar.getInstance();
+			openAt.setTime((Date) result[2]);
 			
 			String grain = (String) result[3];
 			Double averageTemperature = (Double) result[4];
@@ -60,22 +60,24 @@ public class SiloReportGenerator {
 			siloReports.add(siloReport);
 		}
 		
-		totalAverageTemperature /= siloReports.size();
-		totalAverageHumidity /= siloReports.size();
-		totalCapacityUsed /= siloReports.size();
+		if(siloReports.size() > 0) {
+			totalAverageTemperature /= siloReports.size();
+			totalAverageHumidity /= siloReports.size();
+			totalCapacityUsed /= siloReports.size();
+		}
 		
 		SiloReportDTO siloReportDTO = new SiloReportDTO();
 		siloReportDTO.setSiloId(silo.getId());
 		siloReportDTO.setFarmName(silo.getFarm().getName());
-		
 		siloReportDTO.setData(siloReports);
 		siloReportDTO.setTotalAverageTemperature(totalAverageTemperature);
 		siloReportDTO.setTotalAverageHumidity(totalAverageHumidity);
 		siloReportDTO.setTotalCapacityUsed(totalCapacityUsed);
-		
 		siloReportDTO.setProfit(calculateProfits(siloReports));
 		siloReportDTO.setTotalProfit(totalProfit);
 		siloReportDTO.setTotalWeight(totalWeight);
+		siloReportDTO.setReportStart(startDate);
+		siloReportDTO.setReportEnd(endDate);
 		
 		return siloReportDTO;
 	}

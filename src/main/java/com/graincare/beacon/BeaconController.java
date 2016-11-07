@@ -1,7 +1,9 @@
 package com.graincare.beacon;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -15,7 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.graincare.exceptions.BeaconHistoryNotFoundException;
 import com.graincare.exceptions.InconsistentBeaconOnDatabaseException;
 import com.graincare.exceptions.SiloHistoryNotFoundException;
-import com.graincare.mail.SmtpEmailSender;
+import com.graincare.mail.Email;
+import com.graincare.mail.EmailSender;
 import com.graincare.silos.SiloHistory;
 import com.graincare.silos.SiloHistoryRepository;
 import com.graincare.user.LoggedUser;
@@ -32,7 +35,7 @@ public class BeaconController {
 	@Autowired
 	private LoggedUser loggedUser;
 	@Autowired
-	private SmtpEmailSender emailSender;
+	private EmailSender emailSender;
 
 	@RequestMapping(path = "/beacons/history", produces = "application/json", method = RequestMethod.GET)
 	public List<BeaconHistory> getBeaconHistory() {
@@ -122,23 +125,16 @@ public class BeaconController {
 
 		Double grainMaxTemperature = beaconHistory.getSiloHistory().getGrao().getMaxTemperature();
 		if (dto.getTemperature() > grainMaxTemperature) {
-			String region = siloHistory.getSilo().getRegion();
-			String grao = siloHistory.getGrao().getType();
-			String email = siloHistory.getSilo().getFarm().getUser().getEmail();
-			String farmName = siloHistory.getSilo().getFarm().getName();
-
-			StringBuilder message = new StringBuilder();
-			message.append("<span style='font-size:2em'>");
-			message.append("Atenção!<br/>O silo que está com <b>" + grao + "</b> ");
-			message.append("na região: <b>" + region + "</b>, na fazenda: <b>" + farmName + "</b>");
-			message.append(", está com a temperatura de " + dto.getTemperature() + " graus");
-			message.append(", sendo que sua temperatura máxima é de: " + grainMaxTemperature + " graus.");
-			message.append("</span>");
-
-			emailSender.to(email)
-					.withSubject("ATENÇÃO, silo com temperatura acima do normal!")
-					.withMessage(message.toString())
-					.send();
+			String to = siloHistory.getSilo().getFarm().getUser().getEmail();
+			
+			Map<String, Object> payload = new HashMap<>();
+			payload.put("region", siloHistory.getSilo().getRegion());
+			payload.put("grain", siloHistory.getGrao().getType());
+			payload.put("farmName", siloHistory.getSilo().getFarm().getName());
+			payload.put("temperature", dto.getTemperature());
+			payload.put("maxTemperature", siloHistory.getGrao().getMaxTemperature());
+			Email email = new Email(to, "", payload, "beacon_alert.html");
+			emailSender.send(email);
 		}
 	}
 }

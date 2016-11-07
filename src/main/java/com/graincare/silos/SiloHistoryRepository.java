@@ -20,8 +20,9 @@ public interface SiloHistoryRepository {
 	SiloHistory save(SiloHistory siloHistory);
 	
 	@Query(value = "select s.id as siloId,  "
-			+ " s.closed_at closedAt,  " 
-			+ " s.opened_at openAt, " + "s.grao grain, "
+			+ " date(s.closed_at) closedAt,  " 
+			+ " date(s.opened_at) openAt, " 
+			+ " s.grao grain, "
 			+ " sum(b.temperature) / sum(1) as averageTemperature, " 
 			+ " sum(b.`humidity`) / sum(1) as averageHumidity, "
 			+ " (((select max(bh.distance) from beacon_history bh  "
@@ -34,6 +35,6 @@ public interface SiloHistoryRepository {
 			+ " and date(s.closed_at) between date(:starDate) and date(:endDate) " 
 			+ " and s.silo_id = :siloId "
 			+ " group by s.id ", nativeQuery = true)
-	List<Object[]> generateReportFor(@Param("siloId") Long siloId, @Param("starDate") Date startDate,
+	List<Object[]> generateReportFor(@Param("siloId") Long siloId,  @Param("starDate") Date startDate,
 			@Param("endDate") Date endDate);
 }
