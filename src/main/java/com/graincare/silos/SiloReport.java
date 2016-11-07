@@ -3,6 +3,7 @@ package com.graincare.silos;
 import java.util.Calendar;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 public class SiloReport {
 
@@ -11,10 +12,15 @@ public class SiloReport {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
 	private Calendar openAt;
 	private String grain;
+	@JsonInclude(value = JsonInclude.Include.NON_NULL)
 	private Double averageTemperature;
+	@JsonInclude(value = JsonInclude.Include.NON_NULL)
 	private Double averageHumidity;
+	@JsonInclude(value = JsonInclude.Include.NON_NULL)
 	private Double capacityPercentUsed;
+	@JsonInclude(value = JsonInclude.Include.NON_NULL)
 	private Double grainWeight;
+	@JsonInclude(value = JsonInclude.Include.NON_NULL)
 	private Double grainPrice;
 
 	public Calendar getClosedAt() {

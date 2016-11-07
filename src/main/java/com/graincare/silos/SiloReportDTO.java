@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 public class SiloReportDTO {
 	private Long siloId;
@@ -13,11 +14,16 @@ public class SiloReportDTO {
 	private Date reportEnd;
 	private String farmName;
 	private List<SiloReport> data;
+	@JsonInclude(value = JsonInclude.Include.NON_NULL)
 	private Double totalAverageTemperature;
+	@JsonInclude(value = JsonInclude.Include.NON_NULL)
 	private Double totalAverageHumidity;
+	@JsonInclude(value = JsonInclude.Include.NON_NULL)
 	private Double totalCapacityUsed;
 	private List<SiloReportProfit> profit;
+	@JsonInclude(value = JsonInclude.Include.NON_NULL)
 	private Double totalProfit;
+	@JsonInclude(value = JsonInclude.Include.NON_NULL)
 	private Double totalWeight;
 
 	public Double getTotalProfit() {

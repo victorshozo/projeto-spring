@@ -1,8 +1,11 @@
 package com.graincare.silos;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 public class SiloReportProfit {
 	private Double totalWeight;
 	private String grain;
+	@JsonInclude(value = JsonInclude.Include.NON_NULL)
 	private Double profit;
 
 	public Double getTotalWeight() {
