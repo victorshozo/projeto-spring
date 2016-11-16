@@ -33,10 +33,10 @@
 				<td th:text="${#calendars.format(line.closedAt, 'dd/MM/yyyy')}"></td>
 				<td th:text="${#calendars.format(line.openAt, 'dd/MM/yyyy')}"></td>
 				<td th:text="${line.grain}"></td>
-				<td th:text="${line.grainWeight} + ' KG'"></td>
-				<td th:text="${line.averageTemperature} + '°'"></td>
-				<td th:text="${line.averageHumidity} + '%'"></td>
-				<td th:text="${line.capacityPercentUsed} + '%'"></td>
+				<td th:text="${#numbers.formatDecimal(line.grainWeight, 0, 'POINT', 2, 'COMMA')} + ' KG'"></td>
+				<td th:text="${#numbers.formatDecimal(line.averageTemperature, 0, 'POINT', 2, 'COMMA')} + '°'"></td>
+				<td th:text="${#numbers.formatDecimal(line.averageHumidity, 0, 'POINT', 2, 'COMMA')} + '%'"></td>
+				<td th:text="${#numbers.formatDecimal(line.capacityPercentUsed, 0, 'POINT', 2, 'COMMA')} + '%'"></td>
 				<td th:text="'R$ ' + ${#numbers.formatDecimal(line.grainPrice, 0, 'POINT', 2, 'COMMA')}"></td>
 			</tr>	
 		</tbody>
@@ -53,7 +53,7 @@
 		<tbody style="border:1px solid #ccc; padding:4px;">
 			<tr style="border:1px solid #ccc; padding:4px; text-align: center; background:#efefef;" th:each="line : ${profit}">
 				<td th:text="${line.grain}"></td>
-				<td th:text="${line.totalWeight} + ' KG'"></td>
+				<td th:text="${#numbers.formatDecimal(line.totalWeight, 0, 'POINT', 2, 'COMMA')} + ' KG'"></td>
 				<td th:text="'R$ ' + ${#numbers.formatDecimal(line.profit, 0, 'POINT', 2, 'COMMA')}"></td>
 			</tr>
 		</tbody>
