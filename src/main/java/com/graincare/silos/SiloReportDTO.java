@@ -5,28 +5,44 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.graincare.configuration.CustomDoubleSerializer;
 
 public class SiloReportDTO {
 	private Long siloId;
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+	
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
 	private Date reportStart;
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+	
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
 	private Date reportEnd;
+	
 	private String farmName;
 	private List<SiloReport> data;
+	
 	@JsonInclude(value = JsonInclude.Include.NON_NULL)
-	private Double totalAverageTemperature;
-	@JsonInclude(value = JsonInclude.Include.NON_NULL)
+	@JsonSerialize(using = CustomDoubleSerializer.class)
 	private Double totalAverageHumidity;
+	
 	@JsonInclude(value = JsonInclude.Include.NON_NULL)
+	@JsonSerialize(using = CustomDoubleSerializer.class)
+	private Double totalAverageTemperature;
+	
+	@JsonInclude(value = JsonInclude.Include.NON_NULL)
+	@JsonSerialize(using = CustomDoubleSerializer.class)
 	private Double totalCapacityUsed;
+	
 	private List<SiloReportProfit> profit;
+
 	@JsonInclude(value = JsonInclude.Include.NON_NULL)
+	@JsonSerialize(using = CustomDoubleSerializer.class)
 	private Double totalProfit;
+	
 	@JsonInclude(value = JsonInclude.Include.NON_NULL)
+	@JsonSerialize(using = CustomDoubleSerializer.class)
 	private Double totalWeight;
 
-	public Double getTotalProfit() {
+	public double getTotalProfit() {
 		return totalProfit;
 	}
 

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -25,7 +26,10 @@ import com.graincare.beacon.BeaconNotFoundException;
 import com.graincare.beacon.BeaconRepository;
 import com.graincare.exceptions.SiloHistoryNotFoundException;
 import com.graincare.exceptions.SiloNotFoundException;
+import com.graincare.mail.Email;
+import com.graincare.mail.EmailSender;
 import com.graincare.user.LoggedUser;
+import com.graincare.user.User;
 
 @RestController
 public class SiloController {
@@ -45,7 +49,11 @@ public class SiloController {
 	@Autowired
 	private LoggedUser loggedUser;
 	@Autowired
-	private SiloReportGenerator siloReportGenerator;
+	private EmailSender emailSender;
+	@Autowired
+	private SiloReportDTOToMapConverter siloReportDTOconverter;
+	@Autowired
+	private SiloReportService siloReportService;
 	
 	@RequestMapping(path = "/silos/history", produces = "application/json", method = RequestMethod.GET)
 	public List<SiloHistory> getSilosHistory() {
@@ -181,16 +189,24 @@ public class SiloController {
 	public SiloReportDTO getReport(@PathVariable Long siloId,
 			@RequestParam @DateTimeFormat(pattern = "dd/MM/yyyy") Date startDate,
 			@RequestParam @DateTimeFormat(pattern = "dd/MM/yyyy") Date endDate) {
-		Optional<Silo> silo = siloRepository.findByIdAndFarmUserId(siloId, loggedUser.get().getId());
-		if(!silo.isPresent()) {
-			throw new SiloNotFoundException();
-		}
-		
-		List<Object[]> results = siloHistoryRepository.generateReportFor(siloId, startDate, endDate);
-		SiloReportDTO siloReportDTO = siloReportGenerator.generateFor(silo.get(), results);
-		siloReportDTO.setReportStart(startDate);
-		siloReportDTO.setReportEnd(endDate);
+		SiloReportDTO siloReportDTO = siloReportService.generateReport(siloId, startDate, endDate);
 		
 		return siloReportDTO;
 	}
+	
+	@RequestMapping(path = "/silos/{siloId}/report/email", method = RequestMethod.POST)
+	public void senReportToEmail(@PathVariable Long siloId,
+			@RequestParam @DateTimeFormat(pattern = "dd/MM/yyyy") Date startDate,
+			@RequestParam @DateTimeFormat(pattern = "dd/MM/yyyy") Date endDate) {
+		User user = loggedUser.get();
+		
+		SiloReportDTO siloReportDTO = siloReportService.generateReport(siloId, startDate, endDate);
+		if(siloReportDTO.getData().size() > 0){
+			Map<String, Object> payload = siloReportDTOconverter.convert(siloReportDTO);
+			
+			Email email = new Email(user.getEmail(), "Relatório de silo", payload , "report.html");
+			emailSender.send(email);
+		}
+	}
+	
 }

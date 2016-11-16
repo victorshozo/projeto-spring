@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset='UTF-8'></meta>
+	<title>Relatório de silo</title>
+</head>
+<body>
+	<h1>Reletório analítico</h1>
+	<div style='width:100%; float:left;'>
+		Fazenda: <span style='font-weight:bold' th:text="${farmName}"></span>
+	</div>
+	<div style='width:100%; float:left;'>
+		Silo: <span style='font-weight:bold' th:text="${siloId}">1</span>
+	</div>
+	<p>
+		<div>Período: <span style='font-weight:bold' th:text="${startDate}"></span> a <span style='font-weight:bold' th:text="${endDate}"></span></div>
+	</p>
+	<table style='width:100%; border:1px solid #ccc; padding:4px;'>
+		<thead>
+			<tr style='border:1px solid #ccc; padding:4px;'>
+				<th style="border:1px solid #ccc;">Fechamento</th>
+				<th style="border:1px solid #ccc;">Abertura</th>
+				<th style="border:1px solid #ccc;">Grão</th>
+				<th style="border:1px solid #ccc;">Quantidade KG</th>
+				<th style="border:1px solid #ccc;">Temperatura média</th>
+				<th style="border:1px solid #ccc;">Umidade média</th>
+				<th style="border:1px solid #ccc;">Uso da capacidade do silo</th>
+				<th style="border:1px solid #ccc;">Preço</th>
+			</tr>
+		</thead>
+		<tbody style="border:1px solid #ccc; padding:4px;">
+			<tr style="border:1px solid #ccc; padding:4px; text-align: center; background:#efefef;" th:each="line : ${data}">
+				<td th:text="${#calendars.format(line.closedAt, 'dd/MM/yyyy')}"></td>
+				<td th:text="${#calendars.format(line.openAt, 'dd/MM/yyyy')}"></td>
+				<td th:text="${line.grain}"></td>
+				<td th:text="${line.grainWeight} + ' KG'"></td>
+				<td th:text="${line.averageTemperature} + '°'"></td>
+				<td th:text="${line.averageHumidity} + '%'"></td>
+				<td th:text="${line.capacityPercentUsed} + '%'"></td>
+				<td th:text="'R$ ' + ${#numbers.formatDecimal(line.grainPrice, 0, 'POINT', 2, 'COMMA')}"></td>
+			</tr>	
+		</tbody>
+	</table>
+
+	<table style='width:400px; border:1px solid #ccc; padding:4px; margin-top:15px;'>
+		<thead>
+			<tr style='border:1px solid #ccc; padding:4px;'>
+				<th style="border:1px solid #ccc;">Grão</th>
+				<th style="border:1px solid #ccc;">Peso</th>
+				<th style="border:1px solid #ccc;">Total R$</th>
+			</tr>
+		</thead>
+		<tbody style="border:1px solid #ccc; padding:4px;">
+			<tr style="border:1px solid #ccc; padding:4px; text-align: center; background:#efefef;" th:each="line : ${profit}">
+				<td th:text="${line.grain}"></td>
+				<td th:text="${line.totalWeight} + ' KG'"></td>
+				<td th:text="'R$ ' + ${#numbers.formatDecimal(line.profit, 0, 'POINT', 2, 'COMMA')}"></td>
+			</tr>
+		</tbody>
+	</table>
+
+</body>
+</html>
