@@ -1,0 +1,40 @@
+<html xmlns:layout="http://www.thymeleaf.org"
+	xmlns:th="http://www.thymeleaf.org"
+	layout:include="fragments/page :: page(
+		header=true,
+		title='Fazendas',
+    	css='farms'
+	)">
+	<main layout:fragment="content">
+		<div class="panel panel-default box-farms col-md-8 col-md-offset-2">
+			<div class="panel-heading">Lista de Fazendas do usuário: <span class="bold" th:text="${userEmail}"></span></div>
+			<table class="table" cellspacing="5">
+				<thead>
+					<tr>
+						<th>#</th>
+						<th>Nome</th>
+						<th class="text-center"><span class="glyphicon glyphicon-th-list"></span></th>
+						<th class="text-center"><span class="glyphicon glyphicon-th-list"></span></th>
+						<th class="text-center"><span class="glyphicon glyphicon-pencil"></span></th>
+						<th class="text-center"><span class="glyphicon glyphicon-minus"></span></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="farm : ${farms}">
+						<td th:text="${farm.id}"></td>
+						<td th:text="${farm.name}"></td>
+						<td class="text-center"><a th:href="'/fazenda/' + ${farm.id} + '/silos'" class="btn btn-primary">ver silos</a></td>
+						<td class="text-center"><a th:href="'/fazenda/' + ${farm.id} + '/sensores'" class="btn btn-primary">ver sensores</a></td>
+						<td class="text-center"><a th:href="'/fazenda/' + ${farm.id}" class="btn btn-primary">editar</a></td>
+						<td class="text-center"><span id="delete-farm" class="btn btn-danger">excluir</span></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="col-md-8 col-md-offset-2">
+		<a th:href="'/cadastro/fazenda/user/' + ${userId}" class="btn btn-success pull-right btn-new-silo">Cadastrar nova fazenda</a>
+			<a th:href="'/cadastro/silo/user/' + ${userId}" class="btn btn-success pull-right btn-new-silo">Cadastrar novo silo</a>
+			<a th:href="'/cadastro/sensor/user/' + ${userId}" class="btn btn-success pull-right">Cadastrar novo sensor</a>
+		</div>
+	</main>
+</html>

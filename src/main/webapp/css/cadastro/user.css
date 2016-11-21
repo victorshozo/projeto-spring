@@ -1,0 +1,23 @@
+.form-user {
+	padding-top: 5px;
+	margin-top: 2em;
+}
+
+.form-user legend {
+	margin-bottom: 1em;
+}
+
+.form-user .button-box {
+	margin-top: 3em;
+}
+
+.farm-line {
+	margin-bottom: 4px;
+}
+
+.add-more-farm, .remove-farm{
+	margin-left: 3px !important;
+}
+.add-more-farm span, .remove-farm span{
+	height: 20px;
+}

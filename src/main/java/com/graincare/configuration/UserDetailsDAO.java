@@ -12,11 +12,11 @@ import com.graincare.user.UserRepository;
 public class UserDetailsDAO implements UserDetailsService {
 	
 	@Autowired
-	private UserRepository buyerRepository;
+	private UserRepository userRepository;
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		return buyerRepository.findByEmail(username)
+		return userRepository.findByEmail(username)
 						.orElseThrow(() -> new UsernameNotFoundException("user not found"));
 	}
 

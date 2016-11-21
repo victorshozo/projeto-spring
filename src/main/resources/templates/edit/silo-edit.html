@@ -1,0 +1,44 @@
+<html xmlns:layout="http://www.thymeleaf.org"
+	xmlns:th="http://www.thymeleaf.org"
+	layout:include="fragments/page :: page(
+		header=true,
+		title='Silos',
+    	css='cadastro/silo',
+    	js='silo'
+	)">
+	<main layout:fragment="content">
+		<form class="form-horizontal col-md-4 col-md-offset-4 form-silo" id="silo-edit-form">
+			<fieldset>
+				<legend>Edição de silo</legend>
+				
+				<input type="hidden" th:value="${silo.id}" id="silo-id"/>
+				
+				<div class="form-group">
+					<label class="col-md-5 control-label" for="region">Região</label>
+					<div class="col-md-7">
+						<input type="text" th:value="${silo.region}" id="region" name="region" placeholder="Região do silo" class="form-control input-md">
+					</div>
+				</div>
+		
+				<div class="form-group">
+					<label class="col-md-5 control-label">Tamanho em centímetros</label>
+					<div class="col-md-7">
+						<input type="text" th:value="${silo.size}" name="size" placeholder="Tamanho (cm)" class="form-control input-md">
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<label class="col-md-5 control-label">Capacidade em kilos</label>
+					<div class="col-md-7">
+						<input type="text" th:value="${silo.capacity}" name="capacity" placeholder="Capacidade (Kg)" class="form-control input-md">
+					</div>
+				</div>
+			</fieldset>	
+			<div class="form-group button-box">
+				<div class="col-md-12">
+					<input type="submit" value="Atualizar" class="btn btn-success pull-right"/>
+				</div>
+			</div>
+		</form>
+	</main>
+</html>

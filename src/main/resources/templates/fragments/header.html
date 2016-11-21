@@ -1,0 +1,41 @@
+<div th:fragment="header">
+    <nav class="navbar navbar-default navbar-static-top" th:classappend="${!visible} ? hide-alert : navbar-static-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed"
+                    data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+                    aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/home">
+                    <img src="/assets/images/logo.png" class="logo-image"/>
+                </a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li class="dropdown" sec:authorize="isAuthenticated()">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            Cadastro <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/cadastro/usuario">Usuários</a></li>
+                            <li><a href="/cadastro/silo">Silos</a></li>
+                            <li><a href="/cadastro/sensor">Sensores</a></li>
+                        </ul>
+                    </li>
+                    <li sec:authorize="isAuthenticated()"><a href="/usuarios">Lista de Usuários</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right" >
+                    <li class="active" sec:authorize="!isAuthenticated()"><a href="/login">Login <span class="sr-only">(current)</span></a></li>
+                    <li class="active" sec:authorize="isAuthenticated()" id="logout-btn"><a href="#">Sair <span class="sr-only">(current)</span></a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="alert alert-success hide-alert col-md-6 col-md-offset-3" id="success-alert" role="alert"></div>
+    <div class="alert alert-danger hide-alert col-md-6 col-md-offset-3" id="error-alert" role="alert"></div>
+</div>
+

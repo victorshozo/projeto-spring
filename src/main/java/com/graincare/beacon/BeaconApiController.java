@@ -24,7 +24,7 @@ import com.graincare.silos.SiloHistoryRepository;
 import com.graincare.user.LoggedUser;
 
 @RestController
-public class BeaconController {
+public class BeaconApiController {
 
 	@Autowired
 	private BeaconRepository beaconRepository;

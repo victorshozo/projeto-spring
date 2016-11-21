@@ -42,10 +42,15 @@ dependencies {
     compile 'org.json:json:20160810'
     
     compile 'javax.mail:mail:1.4'
+    
     compile ('org.springframework.boot:spring-boot-starter-thymeleaf'){
     	exclude module: 'spring-boot-starter-tomcat'
     }
-     
+    compile 'org.thymeleaf.extras:thymeleaf-extras-java8time:3.0.0.RELEASE'
+    
+    compile 'net.sourceforge.nekohtml:nekohtml:1.9.21'
+    compile 'org.thymeleaf.extras:thymeleaf-extras-springsecurity4:2.1.2.RELEASE'
+    
 	compile 'org.apache.commons:commons-email:1.4'
     compile 'org.springframework.security:spring-security-web'
     compile 'org.springframework.security:spring-security-config'

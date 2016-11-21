@@ -11,4 +11,8 @@ public interface BeaconRepository {
 	
 	List<Beacon> findByFarmUserIdAndIdIn(Long userId, List<Long> ids);
 	
+	void save(Beacon beacon);
+
+	void delete(Beacon beacon);
+	
 }
