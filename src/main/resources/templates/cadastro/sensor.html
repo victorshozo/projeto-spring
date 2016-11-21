@@ -1,0 +1,32 @@
+<html xmlns:layout="http://www.thymeleaf.org" xmlns:th="http://www.thymeleaf.org" 
+	layout:include="fragments/page :: page(
+		header=true,
+		title='Sensores',
+		js='sensor',
+    	css='cadastro/sensor'
+	)">
+	<main layout:fragment="content">
+		<div class="form-horizontal col-md-4 col-md-offset-4 form-sensor">
+			<fieldset>
+				<legend>Cadastro de Sensores</legend>
+
+				<span class="col-md-12 text-center title">Escolha um usuário para prosseguir</span>
+				<div class="form-group">
+					<label class="col-md-3 control-label">Usuário</label>
+					<div class="col-md-9">
+						<select class="form-control" id="user">
+							 <option th:each="user : ${users}"
+                             		th:value="${user.id}"
+                             		th:text="${user.email}" />
+						</select>
+					</div>
+				</div>
+			</fieldset>
+			<div class="form-group button-box">
+				<div class="col-md-12">
+					<button class="btn btn-success pull-right next-page">Prosseguir</button>
+				</div>
+			</div>
+		</div>
+    </main>
+</html>

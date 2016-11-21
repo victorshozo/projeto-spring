@@ -1,0 +1,27 @@
+.form-silo {
+	padding-top: 5px;
+	margin-top: 2em;	
+}
+
+.form-silo legend {
+	margin-bottom: 1em;
+}
+
+.form-silo .title {
+	margin-bottom: 2em;
+}
+
+.form-silo .button-box {
+	margin-top: 1em;
+}
+
+.silo-line {
+	margin-bottom: 4px;
+}
+
+.add-more-silo, .remove-silo{
+	margin-left: 3px !important;
+}
+.add-more-silo span, .remove-silo span{
+	height: 20px;
+}

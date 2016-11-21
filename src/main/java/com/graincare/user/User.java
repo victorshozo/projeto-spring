@@ -43,13 +43,16 @@ public class User implements UserDetails {
 	@Column(name = "password", nullable = false)
 	private String password;
 	
+	@Column(name = "role", nullable = false)
+	private String role;
+	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user", fetch = FetchType.EAGER)
 	private List<Farm> farms = new ArrayList<>();
 	
-	public User(String email, String password, List<Farm> farms) {
+	public User(String email, String password) {
 		this.password = password;
 		this.email = email;
-		this.farms = farms;
+		this.role = "ROLE_USER";
 	}
 	
 	@Deprecated
@@ -85,6 +88,13 @@ public class User implements UserDetails {
 		this.password = password;
 	}
 	
+	public String getRole() {
+		return this.role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
 	public List<Farm> getFarms() {
 		return farms;
 	}
@@ -95,7 +105,7 @@ public class User implements UserDetails {
 	
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return asList(new SimpleGrantedAuthority("USER"));
+		return asList(new SimpleGrantedAuthority(this.role));
 	}
 
 	@Override

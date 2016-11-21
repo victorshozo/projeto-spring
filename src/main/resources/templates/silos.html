@@ -1,0 +1,35 @@
+<html xmlns:layout="http://www.thymeleaf.org"
+	xmlns:th="http://www.thymeleaf.org"
+	layout:include="fragments/page :: page(
+		header=true,
+		title='Silos',
+		css='silos'
+	)">
+	<main layout:fragment="content">
+		<div class="panel panel-default box-silos col-md-8 col-md-offset-2">
+			<div class="panel-heading">Lista de silos da fazenda: <span class="bold" th:text="${farmName}"></span></div>
+			<table class="table" cellspacing="5">
+				<thead>
+					<tr>
+						<th>#</th>
+						<th>Região</th>
+						<th>Tamanho</th>
+						<th>Capacidade</th>
+						<th class="text-center"><span class="glyphicon glyphicon-pencil"></span></th>
+						<th class="text-center"><span class="glyphicon glyphicon-minus"></span></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="silo : ${silos}">
+						<td th:text="${silo.id}"></td>
+						<td th:text="${silo.region}"></td>
+						<td th:text="${silo.size} + ' cm'"></td>
+						<td th:text="${silo.capacity} + ' kg'"></td>
+						<td class="text-center"><a th:href="'/silo/' + ${silo.id}" class="btn btn-primary">editar</a></td>
+						<td class="text-center"><span id="delete-silo" class="btn btn-danger">excluir</span></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</main>
+</html>

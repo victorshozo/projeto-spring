@@ -9,6 +9,14 @@ import org.springframework.data.repository.RepositoryDefinition;
 public interface SiloRepository {
 
 	List<Silo> findByFarmUserId(Long userId);
+	
+	List<Silo> findByFarmId(Long farmId);
 
 	Optional<Silo> findByIdAndFarmUserId(Long id, Long userId);
+
+	void save(Silo silo);
+
+	Optional<Silo> findById(Long siloId);
+
+	void delete(Silo silo);
 }

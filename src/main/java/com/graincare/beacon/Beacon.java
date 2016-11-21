@@ -28,8 +28,8 @@ public class Beacon {
 	Beacon() {
 	}
 
-	public Beacon(Long id) {
-		this.id = id;
+	public Beacon(Farm farm) {
+		this.farm = farm;
 	}
 
 	public Long getId() {
@@ -39,7 +39,7 @@ public class Beacon {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	
+
 	@JsonIgnore
 	public Farm getFarm() {
 		return farm;

@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.RememberMeAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -13,6 +14,7 @@ import org.springframework.security.web.authentication.Http403ForbiddenEntryPoin
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(securedEnabled = true)
 class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 	
 	@Value("${security.cookie.name}")
@@ -28,7 +30,7 @@ class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 	private LoginSuccessHandler successHandler;
 	@Autowired
 	private LogoutHandler logoutSuccessHandler;
-
+	
 	@Override 
 	protected void configure(HttpSecurity http) throws Exception {
         http
@@ -36,16 +38,24 @@ class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
             .authorizeRequests()
                 .antMatchers("/register").permitAll()
                 .antMatchers("/beacon/history").permitAll()
+                .antMatchers("/assets/**").permitAll()
+                .antMatchers("/dist/**").permitAll()
+                .antMatchers("/css/**").permitAll()
+                .antMatchers("/js/**").permitAll()
+                .antMatchers("/vendor/**").permitAll()
+                .antMatchers("/login").permitAll()
+                .antMatchers("/home").permitAll()
                 .anyRequest().authenticated()
                 .and()
             .formLogin()
             	.loginPage("/login")
 	            .loginProcessingUrl("/login")
+	            .defaultSuccessUrl("/home", true)
 	            .successHandler(successHandler)
 	            .failureHandler(failureLogin)
 	            .permitAll()
 	            .and()
-            .logout().logoutRequestMatcher(new AntPathRequestMatcher("/login", "DELETE"))
+            .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout", "POST"))
             	.clearAuthentication(true)
                 .deleteCookies(cookieName)
                 .invalidateHttpSession(true)

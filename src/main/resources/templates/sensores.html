@@ -1,0 +1,28 @@
+<html xmlns:layout="http://www.thymeleaf.org"
+	xmlns:th="http://www.thymeleaf.org"
+	layout:include="fragments/page :: page(
+		header=true,
+		title='Sensores',
+		js='sensor',
+		css='sensores'
+	)">
+	<main layout:fragment="content">
+		<div class="panel panel-default box-sensores col-md-4 col-md-offset-4">
+			<div class="panel-heading">Lista de sensores da fazenda: <span class="bold" th:text="${farmName}"></span></div>
+			<table class="table" cellspacing="3">
+				<thead>
+					<tr>
+						<th class="text-center">#</th>
+						<th class="text-center"><span class="glyphicon glyphicon-minus"></span></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="sensor : ${sensores}">
+						<td class="text-center" th:text="${sensor.id}"></td>
+						<td class="text-center"><span id="delete-user" class="btn btn-danger">excluir</span></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</main>
+</html>

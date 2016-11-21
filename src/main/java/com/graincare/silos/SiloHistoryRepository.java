@@ -37,4 +37,6 @@ public interface SiloHistoryRepository {
 			+ " group by s.id ", nativeQuery = true)
 	List<Object[]> generateReportFor(@Param("siloId") Long siloId,  @Param("starDate") Date startDate,
 			@Param("endDate") Date endDate);
+
+	void delete(SiloHistory siloHistory);
 }

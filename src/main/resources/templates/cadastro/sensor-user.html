@@ -1,0 +1,38 @@
+<html xmlns:layout="http://www.thymeleaf.org" xmlns:th="http://www.thymeleaf.org" 
+	layout:include="fragments/page :: page(
+		header=true,
+		title='Sensores',
+		js='sensor',
+    	css='cadastro/sensor'
+	)">
+	<main layout:fragment="content">
+		<form class="form-horizontal col-md-4 col-md-offset-4 form-sensor" id="sensor-form">
+			<fieldset>
+				<legend>Cadastro de Sensores</legend>
+				
+				<small th:text="'Usuário: ' + ${userEmail}"></small>
+				
+				<div class="form-group">
+					<label class="col-md-5 control-label">Fazenda</label>
+					<div class="col-md-7">
+						<select class="form-control" name="farmId">
+							<option th:each="farm : ${farms}" th:value="${farm.id}" th:text="${farm.name}" />
+						</select>
+					</div>
+				</div>
+		
+				<div class="form-group">
+					<label class="col-md-5 control-label">Quantidade</label>
+					<div class="col-md-7">
+						<input type="number" name="quantity" placeholder="Quantidade de sensores" class="form-control input-md">
+					</div>
+				</div>
+			</fieldset>	
+			<div class="form-group button-box">
+				<div class="col-md-12">
+					<input type="submit" value="Cadastrar" class="btn btn-success pull-right"/>
+				</div>
+			</div>
+		</form>
+    </main>
+</html>

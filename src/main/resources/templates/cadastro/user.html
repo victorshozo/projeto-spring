@@ -1,0 +1,45 @@
+<html xmlns:layout="http://www.thymeleaf.org"
+	xmlns:th="http://www.thymeleaf.org"
+	layout:include="fragments/page :: page(
+		header=true,
+		title='Usuários',
+    	css='cadastro/user',
+    	js='user'
+	)">
+	<main layout:fragment="content">
+		<form class="form-horizontal col-md-4 col-md-offset-4 form-user" id="user-form">
+			<fieldset>
+				<legend>Cadastro de usuário</legend>
+				
+				<div class="form-group">
+					<label class="col-md-4 control-label" for="email">Email</label>
+					<div class="col-md-6">
+						<input type="text" id="email" name="email" placeholder="Email do usuário" class="form-control input-md">
+					</div>
+				</div>
+		
+				<div class="form-group">
+					<label class="col-md-4 control-label" for="password">Senha</label>
+					<div class="col-md-6">
+						<input type="password" id="password" name="password" placeholder="Senha" class="form-control input-md">
+					</div>
+				</div>
+					
+				<legend>Fazendas</legend>
+				<div class="form-group farm-box">
+					<div class="input-group col-md-8 col-md-offset-2 farm-line">
+						<input type="text" name="farmNames" class="form-control input-md" placeholder="Digite o nome da fazenda">
+						<span class="input-group-btn">
+							<button class="btn btn-default add-more-farm glyphicon glyphicon-plus" type="button"></button>
+						</span>
+					</div>
+				</div>
+			</fieldset>	
+			<div class="form-group button-box">
+				<div class="col-md-12">
+					<input type="submit" value="Cadastrar" class="btn btn-success pull-right"/>
+				</div>
+			</div>
+		</form>
+	</main>
+</html>

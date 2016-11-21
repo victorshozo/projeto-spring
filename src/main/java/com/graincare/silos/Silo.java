@@ -33,6 +33,13 @@ public class Silo {
 	@Deprecated
 	Silo() {
 	}
+	
+	public Silo(Farm farm, String region, Double size, Double  capacity){
+		this.farm = farm;
+		this.region = region;
+		this.capacity = capacity;
+		this.size = size;
+	}
 
 	public Long getId() {
 		return id;

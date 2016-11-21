@@ -1,0 +1,36 @@
+<html xmlns:layout="http://www.thymeleaf.org"
+	xmlns:th="http://www.thymeleaf.org"
+	layout:include="fragments/page :: page(
+		header=true,
+		title='Usuários',
+    	css='users',
+    	js='user'
+	)">
+	<main layout:fragment="content">
+		<div class="panel panel-default box-users col-md-8 col-md-offset-2">
+			<div class="panel-heading">Lista de usuários</div>
+			<table class="table" cellspacing="5">
+				<thead>
+					<tr>
+						<th>#</th>
+						<th>Email</th>
+						<th class="text-center">Fazendas</th>
+						<th class="text-center"><span class="glyphicon glyphicon-th-list"></span></th>
+						<th class="text-center"><span class="glyphicon glyphicon-pencil"></span></th>
+						<th class="text-center"><span class="glyphicon glyphicon-minus"></span></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="user : ${users}">
+						<td th:text="${user.id}"></td>
+						<td th:text="${user.email}"></td>
+						<td th:text="${user.farmQuantity}" class="text-center"></td>
+						<td class="text-center"><a th:href="'/usuario/' + ${user.id} + '/fazendas'" class="btn btn-primary">ver fazendas</a></td>
+						<td class="text-center"><a th:href="'/usuario/' + ${user.id}" class="btn btn-primary">editar</a></td>
+						<td class="text-center"><span id="delete-user" class="btn btn-danger">excluir</span></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</main>
+</html>

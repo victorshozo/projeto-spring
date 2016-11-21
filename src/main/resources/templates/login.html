@@ -1,0 +1,26 @@
+<html xmlns:layout="http://www.thymeleaf.org"
+	xmlns:th="http://www.thymeleaf.org"
+	layout:include="fragments/page :: page(
+		header=false,
+		title='Login',
+    	css='login',
+    	js='login'
+	)">
+	<main class="login" layout:fragment="content">
+		<section class="login-container">
+			<div class="login-page">
+				<div class="form-login">
+					<div class="logo-box">
+						<img src="/assets/images/logo.png" class="logo-image"/>
+					</div>
+					
+					<form class="login-form" id="login-form">
+						<input type="text" placeholder="email" name="username"/> 
+						<input type="password" placeholder="senha" name="password"/>
+						<button type="submit">login</button>
+					</form>
+				</div>
+			</div>
+		</section>
+	</main>
+</html>

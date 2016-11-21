@@ -1,0 +1,29 @@
+<html xmlns:layout="http://www.thymeleaf.org"
+	xmlns:th="http://www.thymeleaf.org"
+	layout:include="fragments/page :: page(
+		header=true,
+		title='Fazendas',
+    	js='farm'
+	)">
+	<main layout:fragment="content">
+		<form class="form-horizontal col-md-4 col-md-offset-4 form-farm" id="farm-edit-form">
+			<fieldset>
+				<legend>Edição de fazenda</legend>
+				
+				<input type="hidden" th:value="${farm.id}" id="farm-id"/>
+				
+				<div class="form-group">
+					<label class="col-md-4 control-label">Nome</label>
+					<div class="col-md-6">
+						<input type="text" th:value="${farm.name}" name="name" placeholder="Nome da Fazenda" class="form-control input-md">
+					</div>
+				</div>
+			</fieldset>	
+			<div class="form-group button-box">
+				<div class="col-md-12">
+					<input type="submit" value="Alterar" class="btn btn-success pull-right"/>
+				</div>
+			</div>
+		</form>
+	</main>
+</html>

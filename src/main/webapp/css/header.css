@@ -1,0 +1,9 @@
+.logo-image {
+	width: 100px;
+	height: 40px;
+	margin-top: -10px;
+}
+
+.hide-alert {
+	display: none;
+}

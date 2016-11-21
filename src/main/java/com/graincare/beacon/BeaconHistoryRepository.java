@@ -28,4 +28,9 @@ public interface BeaconHistoryRepository {
 					+ " and b.`temperature` is not null "
 					+ " group by date(b.`updated_at`)", nativeQuery = true)
 	List<Object[]> getListOfAverageTemperatureAndHumidityFor(@Param("siloHistoryId") Long siloHistoryId);
+
+	List<BeaconHistory> findByBeaconIn(List<Beacon> beacons);
+	
+	@Query(value = "delete from beacon_history b where b.beacon_id in(:beaconIds)", nativeQuery = true)
+	void delete(@Param("beaconIds") List<Long> beaconIds);
 }
