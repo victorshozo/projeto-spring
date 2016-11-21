@@ -71,7 +71,7 @@ public class SensorController {
 		Optional<Farm> farm = farmRepository.findById(farmId);
 		if (farm.isPresent()) {
 			modelAndView.addObject("farmName", farm.get().getName());
-			List<Beacon> sensores = beaconRepository.findByFarmUserId(farmId);
+			List<Beacon> sensores = beaconRepository.findByFarmId(farmId);
 		
 			modelAndView.addObject("sensores", sensores);
 		}

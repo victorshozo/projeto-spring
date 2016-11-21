@@ -13,3 +13,10 @@ email.name=Grain Care
 email.username=graincare@gmail.com
 email.password=
 email.debug=false
+
+security.cookie.name=authorization_cookie
+
+spring.mvc.view.prefix=/templates/
+spring.mvc.view.suffix=.html
+spring.thymeleaf.cache=false
+spring.thymeleaf.mode=LEGACYHTML5
