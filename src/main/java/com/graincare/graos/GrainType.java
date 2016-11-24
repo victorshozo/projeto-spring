@@ -5,9 +5,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum GrainType {
-	MILHO(44.0, 13.0, "MILHO"),
-	SOJA(30.0, 13.5, "SOJA"),
-	SORGO(30.0, 15.0, "SORGO");
+	MILHO(20.0, 13.0, "MILHO"),
+	SOJA(20.0, 13.5, "SOJA"),
+	SORGO(20.0, 15.0, "SORGO");
 
 	private Double maxTemperature;
 	private Double maxHumidity;
