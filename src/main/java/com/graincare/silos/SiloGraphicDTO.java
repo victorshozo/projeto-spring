@@ -10,9 +10,9 @@ public class SiloGraphicDTO {
 	private long days;
 	private List<SiloGraphPointDTO> temperatures = new ArrayList<>();
 	private List<SiloGraphPointDTO> humidities = new ArrayList<>();
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
 	private Date startDate;
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
 	private Date endDate;
 
 	public SiloGraphicDTO(long days, List<SiloGraphPointDTO> temperatures, List<SiloGraphPointDTO> humidities,

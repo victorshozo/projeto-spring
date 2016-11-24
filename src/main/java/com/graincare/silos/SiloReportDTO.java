@@ -1,5 +1,6 @@
 package com.graincare.silos;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -11,10 +12,10 @@ import com.graincare.configuration.CustomDoubleSerializer;
 public class SiloReportDTO {
 	private Long siloId;
 	
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
 	private Date reportStart;
 	
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
 	private Date reportEnd;
 	
 	private String farmName;
@@ -32,7 +33,7 @@ public class SiloReportDTO {
 	@JsonSerialize(using = CustomDoubleSerializer.class)
 	private Double totalCapacityUsed;
 	
-	private List<SiloReportProfit> profit;
+	private List<SiloReportProfit> profit = new ArrayList<>();
 
 	@JsonInclude(value = JsonInclude.Include.NON_NULL)
 	@JsonSerialize(using = CustomDoubleSerializer.class)
