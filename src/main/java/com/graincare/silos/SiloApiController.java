@@ -156,13 +156,6 @@ public class SiloApiController {
 		siloHistory.setOpen(false);
 		siloHistory.setSilo(optionalSilo.get());
 		siloHistoryRepository.save(siloHistory);
-
-		beacons.forEach(beacon -> {
-			BeaconHistory beaconHistory = new BeaconHistory();
-			beaconHistory.setBeacon(beacon);
-			beaconHistory.setSiloHistory(siloHistory);
-			beaconHistoryRepository.save(beaconHistory);
-		});
 	}
 
 	@RequestMapping(path = "/silo/{siloId}/prediction", method = RequestMethod.GET)
