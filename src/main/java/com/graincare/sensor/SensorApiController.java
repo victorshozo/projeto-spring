@@ -1,5 +1,7 @@
 package com.graincare.sensor;
 
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -126,5 +128,10 @@ public class SensorApiController {
 			Email email = new Email(to, "ATENÇÃO, SILO COM TEMPERATURA ACIMA DO LIMITE", payload, "sensor_alert.html");
 			emailSender.send(email);
 		}
+	}
+	
+	@RequestMapping(path = "/sensors/{sensorId}/delete", method = POST)
+	public void deleteSensor(@PathVariable("sensorId") Long sensorId){
+		sensorRepository.delete(sensorId);
 	}
 }

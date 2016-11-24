@@ -17,7 +17,6 @@
 						<th class="text-center">Fazendas</th>
 						<th class="text-center"><span class="glyphicon glyphicon-th-list"></span></th>
 						<th class="text-center"><span class="glyphicon glyphicon-pencil"></span></th>
-						<th class="text-center"><span class="glyphicon glyphicon-minus"></span></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -27,7 +26,6 @@
 						<td th:text="${user.farmQuantity}" class="text-center"></td>
 						<td class="text-center"><a th:href="'/usuario/' + ${user.id} + '/fazendas'" class="btn btn-primary">ver fazendas</a></td>
 						<td class="text-center"><a th:href="'/usuario/' + ${user.id}" class="btn btn-primary">editar</a></td>
-						<td class="text-center"><span id="delete-user" class="btn btn-danger">excluir</span></td>
 					</tr>
 				</tbody>
 			</table>

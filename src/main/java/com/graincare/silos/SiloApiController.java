@@ -1,5 +1,7 @@
 package com.graincare.silos;
 
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -213,5 +215,10 @@ public class SiloApiController {
 		List<Object[]> results = siloHistoryRepository.generateGraphicFor(siloId, startDate, endDate);
 		SiloGraphicDTO dto = siloGraphicGenerator.generateGraphicFor(results, startDate, endDate);
 		return dto;
+	}
+	
+	@RequestMapping(path = "/silos/{siloId}/delete", method = POST)
+	public void deleteSensor(@PathVariable("siloId") Long siloId){
+		siloRepository.delete(siloId);
 	}
 }

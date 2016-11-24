@@ -19,7 +19,7 @@
 				<tbody>
 					<tr th:each="sensor : ${sensores}">
 						<td class="text-center" th:text="${sensor.id}"></td>
-						<td class="text-center"><span id="delete-user" class="btn btn-danger">excluir</span></td>
+						<td class="text-center"><button th:onclick="'deleteSensor(' + ${sensor.id} + ')'" class="btn btn-danger">excluir</button></td>
 					</tr>
 				</tbody>
 			</table>

@@ -11,11 +11,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Where;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.graincare.farm.Farm;
 
 @Entity
 @Table(name = "silo")
+@Where(clause = "deleted = 0")
 public class Silo {
 	@Id
 	@GeneratedValue
@@ -29,6 +32,8 @@ public class Silo {
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "farm_id", referencedColumnName = "id", nullable = false)
 	private Farm farm;
+	@Column(name = "deleted")
+	private boolean deleted;
 
 	@Deprecated
 	Silo() {
@@ -81,7 +86,16 @@ public class Silo {
 	public void setFarm(Farm farm) {
 		this.farm = farm;
 	}
+	
+	@JsonIgnore
+	public boolean isDeleted() {
+		return deleted;
+	}
 
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)

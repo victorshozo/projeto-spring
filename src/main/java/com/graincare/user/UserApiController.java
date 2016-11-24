@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -31,6 +32,8 @@ public class UserApiController {
 			payload.put("password", password);
 			Email email = new Email(dto.getEmail(), "Lembrete de senha GrainCare", payload, "reset_password");
 			emailSender.send(email);
+		} else {
+			//throw new UsernameNotFoundException(msg)
 		}
 	}
 }

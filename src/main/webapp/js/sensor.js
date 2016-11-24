@@ -17,4 +17,19 @@ $(document).ready(function(){
 			successAlert("Sensores cadastrados com sucesso!");
 		});
 	});
+
 });
+
+function deleteSensor(sensorId){
+	if(!confirm("Deseja realmente excluir esse sensor?")){
+		return;
+	}
+	var url = '/sensors/' + sensorId + '/delete'
+	console.log(url);
+	$.ajax({
+		url : url,
+		method : 'POST'
+	}).done(function(e) {
+		location.reload();
+	});
+}

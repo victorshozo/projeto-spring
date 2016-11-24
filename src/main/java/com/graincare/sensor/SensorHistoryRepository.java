@@ -30,7 +30,4 @@ public interface SensorHistoryRepository {
 	List<Object[]> getListOfAverageTemperatureAndHumidityFor(@Param("siloHistoryId") Long siloHistoryId);
 
 	List<SensorHistory> findBySensorIn(List<Sensor> sensors);
-	
-	@Query(value = "delete from sensor_history b where b.sensor_id in(:sensorIds)", nativeQuery = true)
-	void delete(@Param("sensorIds") List<Long> sensorIds);
 }

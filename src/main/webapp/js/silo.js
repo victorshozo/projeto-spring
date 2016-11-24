@@ -30,7 +30,7 @@ $(document).ready(function(){
 	});
 	
 	$(document).on('click', '.remove-farm', function(e){
-		$(e.target).parent().parent().remove();
+		console.log($(e.target).parent().parent().remove());
 	});
 	
 	$(document).on('submit', '#silo-edit-form', function(e){
@@ -44,3 +44,17 @@ $(document).ready(function(){
 		});
 	});
 });
+
+function deleteSilo(siloId){
+	if(!confirm("Deseja realmente excluir esse silo?")){
+		return;
+	}
+	var url = '/silos/' + siloId + '/delete'
+	console.log(url);
+	$.ajax({
+		url : url,
+		method : 'POST'
+	}).done(function(e) {
+		location.reload();
+	});
+}

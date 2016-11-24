@@ -3,7 +3,8 @@
 	layout:include="fragments/page :: page(
 		header=true,
 		title='Silos',
-		css='silos'
+		css='silos',
+		js='silo'
 	)">
 	<main layout:fragment="content">
 		<div class="panel panel-default box-silos col-md-8 col-md-offset-2">
@@ -26,7 +27,7 @@
 						<td th:text="${silo.size} + ' cm'"></td>
 						<td th:text="${silo.capacity} + ' kg'"></td>
 						<td class="text-center"><a th:href="'/silo/' + ${silo.id}" class="btn btn-primary">editar</a></td>
-						<td class="text-center"><span id="delete-silo" class="btn btn-danger">excluir</span></td>
+						<td class="text-center"><button th:onclick="'deleteSilo(' + ${silo.id} + ')'" class="btn btn-danger">excluir</button></td>
 					</tr>
 				</tbody>
 			</table>

@@ -3,7 +3,10 @@ package com.graincare.silos;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.RepositoryDefinition;
+import org.springframework.data.repository.query.Param;
 
 @RepositoryDefinition(domainClass = Silo.class, idClass = Long.class)
 public interface SiloRepository {
@@ -18,5 +21,7 @@ public interface SiloRepository {
 
 	Optional<Silo> findById(Long siloId);
 
-	void delete(Silo silo);
+	@Modifying
+	@Query(value = "update silo set deleted = 1 where id = :siloId", nativeQuery = true)
+	void delete(@Param("siloId") Long siloId);
 }
