@@ -22,12 +22,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.graincare.exceptions.SensorNotFoundException;
 import com.graincare.exceptions.SiloAlreadyInUseFoundException;
 import com.graincare.exceptions.SiloHistoryNotFoundException;
+import com.graincare.exceptions.SiloInUseException;
 import com.graincare.exceptions.SiloNotFoundException;
 import com.graincare.mail.Email;
 import com.graincare.mail.EmailSender;
+import com.graincare.sensor.Sensor;
 import com.graincare.sensor.SensorAverage;
 import com.graincare.sensor.SensorAverageService;
-import com.graincare.sensor.Sensor;
 import com.graincare.sensor.SensorHistory;
 import com.graincare.sensor.SensorHistoryRepository;
 import com.graincare.sensor.SensorRepository;
@@ -219,6 +220,10 @@ public class SiloApiController {
 	
 	@RequestMapping(path = "/silos/{siloId}/delete", method = POST)
 	public void deleteSensor(@PathVariable("siloId") Long siloId){
+		List<SiloHistory> silo = siloHistoryRepository.findBySiloFarmUserId(siloId);
+		if(silo.size() >= 1){
+			throw new SiloInUseException();
+		}
 		siloRepository.delete(siloId);
 	}
 }

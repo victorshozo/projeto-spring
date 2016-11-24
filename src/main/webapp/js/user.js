@@ -23,6 +23,8 @@ $(document).ready(function(){
 		}).done(function(e) {
 			$('#user-form').trigger("reset");
 			successAlert("Usuário cadastrado com sucesso!");
+		}).fail(function(e){
+			errorAlert('Preencha dados válidos');
 		});
 	});
 	
@@ -32,8 +34,8 @@ $(document).ready(function(){
 			url : '/users/' + $('#user-id').val(),
 			method : 'POST',
 			data : $("#user-edit-form").serialize(),
-		}).done(function(e) {
-			successAlert("Dados do usuário alterados com sucesso!");
+		}).fail(function(e){
+			errorAlert('Preencha dados válidos');
 		});
 	});
 	
@@ -46,6 +48,8 @@ $(document).ready(function(){
 		}).done(function(e) {
 			successAlert("Dados do usuário alterados com sucesso!");
 			$(e.target).parent().parent().remove();
+		}).fail(function(e){
+			errorAlert('Preencha dados válidos');
 		});
 	});
 });

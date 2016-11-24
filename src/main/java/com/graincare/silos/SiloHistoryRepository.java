@@ -49,4 +49,6 @@ public interface SiloHistoryRepository {
 			+ " group by date(b.updated_at);", nativeQuery = true)
 	List<Object[]> generateGraphicFor(@Param("siloId") Long siloId, @Param("starDate") Date startDate, 
 			@Param("endDate") Date endDate);
+
+	List<SiloHistory> findBySiloId(Long siloId);
 }

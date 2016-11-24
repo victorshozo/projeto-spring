@@ -31,5 +31,7 @@ function deleteSensor(sensorId){
 		method : 'POST'
 	}).done(function(e) {
 		location.reload();
+	}).fail(function(e){
+		errorAlert("Esse sensor não pode ser excluido, pois está em uso!");
 	});
 }

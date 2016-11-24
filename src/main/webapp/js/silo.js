@@ -56,5 +56,7 @@ function deleteSilo(siloId){
 		method : 'POST'
 	}).done(function(e) {
 		location.reload();
+	}).fail(function(e){
+		errorAlert("Esse silo não pode ser excluido, pois está em uso!");
 	});
 }

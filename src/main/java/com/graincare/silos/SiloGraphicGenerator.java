@@ -23,6 +23,6 @@ public class SiloGraphicGenerator {
 			humidities.add(new SiloGraphPointDTO(i, averageHumidity));
 		}
 		
-		return new SiloGraphicDTO(i, temperatures, humidities);
+		return new SiloGraphicDTO(i, temperatures, humidities, startDate, endDate);
 	}
 }

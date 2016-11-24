@@ -16,8 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.graincare.exceptions.SensorHistoryNotFoundException;
 import com.graincare.exceptions.InconsistentSensorOnDatabaseException;
+import com.graincare.exceptions.SensorHistoryNotFoundException;
+import com.graincare.exceptions.SensorInUseException;
 import com.graincare.exceptions.SiloHistoryNotFoundException;
 import com.graincare.mail.Email;
 import com.graincare.mail.EmailSender;
@@ -132,6 +133,10 @@ public class SensorApiController {
 	
 	@RequestMapping(path = "/sensors/{sensorId}/delete", method = POST)
 	public void deleteSensor(@PathVariable("sensorId") Long sensorId){
+		List<SensorHistory> sensors = sensorHistoryRepository.findBySensorId(sensorId);
+		if(sensors.size() >= 1){
+			throw new SensorInUseException();
+		}
 		sensorRepository.delete(sensorId);
 	}
 }
