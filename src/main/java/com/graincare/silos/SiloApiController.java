@@ -24,6 +24,7 @@ import com.graincare.beacon.BeaconHistory;
 import com.graincare.beacon.BeaconHistoryRepository;
 import com.graincare.beacon.BeaconNotFoundException;
 import com.graincare.beacon.BeaconRepository;
+import com.graincare.exceptions.SiloAlreadyInUseFoundException;
 import com.graincare.exceptions.SiloHistoryNotFoundException;
 import com.graincare.exceptions.SiloNotFoundException;
 import com.graincare.mail.Email;
@@ -54,6 +55,8 @@ public class SiloApiController {
 	private SiloReportDTOToMapConverter siloReportDTOconverter;
 	@Autowired
 	private SiloReportService siloReportService;
+	@Autowired
+	private SiloGraphicGenerator siloGraphicGenerator;
 	
 	@RequestMapping(path = "/silos/history", produces = "application/json", method = RequestMethod.GET)
 	public List<SiloHistory> getSilosHistory() {
@@ -202,4 +205,18 @@ public class SiloApiController {
 		}
 	}
 	
+	@RequestMapping(path = "/silos/{siloId}/graphic", method = RequestMethod.GET)
+	public SiloGraphicDTO getGraph(@PathVariable Long siloId,
+			@RequestParam @DateTimeFormat(pattern = "dd/MM/yyyy") Date startDate,
+			@RequestParam @DateTimeFormat(pattern = "dd/MM/yyyy") Date endDate) {
+		
+		Optional<Silo> silo = siloRepository.findByIdAndFarmUserId(siloId, loggedUser.get().getId());
+		if(!silo.isPresent()) {
+			throw new SiloNotFoundException();
+		}
+		
+		List<Object[]> results = siloHistoryRepository.generateGraphicFor(siloId, startDate, endDate);
+		SiloGraphicDTO dto = siloGraphicGenerator.generateGraphicFor(results, startDate, endDate);
+		return dto;
+	}
 }

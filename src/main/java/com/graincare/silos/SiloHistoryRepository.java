@@ -24,7 +24,7 @@ public interface SiloHistoryRepository {
 			+ " date(s.opened_at) openAt, " 
 			+ " s.grao grain, "
 			+ " sum(b.temperature) / sum(1) as averageTemperature, " 
-			+ " sum(b.`humidity`) / sum(1) as averageHumidity, "
+			+ " sum(b.humidity) / sum(1) as averageHumidity, "
 			+ " (((select max(bh.distance) from beacon_history bh  "
 			+ " 	where bh.silo_history_id = s.id and bh.humidity is null and bh.temperature is null "
 			+ "		group by bh.silo_history_id) * 100) / (select sl.size from silo sl where sl.id = s.id)) capacity "
@@ -37,6 +37,17 @@ public interface SiloHistoryRepository {
 			+ " group by s.id ", nativeQuery = true)
 	List<Object[]> generateReportFor(@Param("siloId") Long siloId,  @Param("starDate") Date startDate,
 			@Param("endDate") Date endDate);
-
+	
+	@Query(value = "select sum(b.humidity) / sum(1) averagehumidity, "
+			+ " sum(b.temperature) / sum(1) averageTemperature "
+			+ " from beacon_history b "
+			+ " inner join silo_history s on s.id = b.silo_history_id "
+			+ " where date(s.closed_at) between date(:starDate) and date(:endDate) "
+			+ " and b.distance is null "
+			+ "	and s.silo_id = :siloId "
+			+ " group by date(b.updated_at);", nativeQuery = true)
+	List<Object[]> generateGraphicFor(@Param("siloId") Long siloId, @Param("starDate") Date startDate, 
+			@Param("endDate") Date endDate);
+	
 	void delete(SiloHistory siloHistory);
 }
