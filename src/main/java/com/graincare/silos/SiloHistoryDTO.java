@@ -7,7 +7,7 @@ import com.graincare.graos.GrainType;
 public class SiloHistoryDTO {
 
 	private Long siloId;
-	private List<Long> beaconsId;
+	private List<Long> sensorsId;
 	private GrainType grainType;
 
 	public Long getSiloId() {
@@ -18,12 +18,12 @@ public class SiloHistoryDTO {
 		this.siloId = siloId;
 	}
 
-	public List<Long> getBeaconsId() {
-		return beaconsId;
+	public List<Long> getSensorsId() {
+		return sensorsId;
 	}
 
-	public void setBeaconsId(List<Long> beaconsId) {
-		this.beaconsId = beaconsId;
+	public void setSensorsId(List<Long> sensorsId) {
+		this.sensorsId = sensorsId;
 	}
 
 	public GrainType getGrainType() {

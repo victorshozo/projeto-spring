@@ -1,4 +1,4 @@
-package com.graincare.beacon;
+package com.graincare.sensor;
 
 import java.util.Calendar;
 import java.util.Objects;
@@ -14,17 +14,18 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.graincare.silos.SiloHistory;
 
 @Entity
-@Table(name = "beacon_history")
-public class BeaconHistory {
+@Table(name = "sensor_history")
+public class SensorHistory {
 	@Id
 	@GeneratedValue
 	private Long id;
 	@OneToOne
 	@NotNull
-	private Beacon beacon;
+	private Sensor sensor;
 	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "silo_history_id")
@@ -37,6 +38,7 @@ public class BeaconHistory {
 	@Column(name = "humidity")
 	private Double humidity;
 	@Column(name = "updated_at")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
 	private Calendar updatedAt = Calendar.getInstance();
 
 	public Long getId() {
@@ -47,12 +49,12 @@ public class BeaconHistory {
 		this.id = id;
 	}
 
-	public Beacon getBeacon() {
-		return beacon;
+	public Sensor getSensor() {
+		return sensor;
 	}
 
-	public void setBeacon(Beacon beacon) {
-		this.beacon = beacon;
+	public void setSensor(Sensor sensor) {
+		this.sensor = sensor;
 	}
 
 	public SiloHistory getSiloHistory() {
@@ -99,10 +101,10 @@ public class BeaconHistory {
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (!(obj instanceof BeaconHistory))
+		if (!(obj instanceof SensorHistory))
 			return false;
 
-		BeaconHistory other = (BeaconHistory) obj;
-		return Objects.equals(this.getBeacon(), other.getBeacon());
+		SensorHistory other = (SensorHistory) obj;
+		return Objects.equals(this.getSensor(), other.getSensor());
 	}
 }

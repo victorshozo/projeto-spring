@@ -1,4 +1,4 @@
-package com.graincare.beacon;
+package com.graincare.sensor;
 
 import java.util.Objects;
 
@@ -14,8 +14,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.graincare.farm.Farm;
 
 @Entity
-@Table(name = "beacon")
-public class Beacon {
+@Table(name = "sensor")
+public class Sensor {
 
 	@Id
 	@GeneratedValue
@@ -25,10 +25,10 @@ public class Beacon {
 	private Farm farm;
 
 	@Deprecated
-	Beacon() {
+	Sensor() {
 	}
 
-	public Beacon(Farm farm) {
+	public Sensor(Farm farm) {
 		this.farm = farm;
 	}
 
@@ -53,10 +53,10 @@ public class Beacon {
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (!(obj instanceof Beacon))
+		if (!(obj instanceof Sensor))
 			return false;
 
-		Beacon other = (Beacon) obj;
+		Sensor other = (Sensor) obj;
 		return Objects.equals(this.id, other.id);
 	}
 }

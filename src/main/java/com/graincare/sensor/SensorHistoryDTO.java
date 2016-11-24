@@ -1,13 +1,13 @@
-package com.graincare.beacon;
+package com.graincare.sensor;
 
-public class BeaconHistoryDTO {
-	private Long beaconId;
+public class SensorHistoryDTO {
+	private Long sensorId;
 	private Double temperature;
 	private Double humidity;
 	private Double distance;
 
-	public Long getBeaconId() {
-		return beaconId;
+	public Long getSensorId() {
+		return sensorId;
 	}
 
 	public Double getTemperature() {
@@ -22,8 +22,8 @@ public class BeaconHistoryDTO {
 		return distance;
 	}
 
-	public void setBeaconId(Long beaconId) {
-		this.beaconId = beaconId;
+	public void setSensorId(Long sensorId) {
+		this.sensorId = sensorId;
 	}
 
 	public void setTemperature(Double temperature) {

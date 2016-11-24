@@ -1,4 +1,4 @@
-package com.graincare.beacon;
+package com.graincare.sensor;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -27,7 +27,7 @@ public class SensorController {
 	@Autowired
 	private FarmRepository farmRepository;
 	@Autowired
-	private BeaconRepository beaconRepository;
+	private SensorRepository sensorRepository;
 
 	@RequestMapping(path = "/cadastro/sensor", method = GET)
 	public ModelAndView getSensorPage() {
@@ -57,7 +57,7 @@ public class SensorController {
 		Optional<Farm> farm = farmRepository.findById(dto.getFarmId());
 		if (farm.isPresent()) {
 			for (int i = 0; i < dto.getQuantity(); i++) {
-				beaconRepository.save(new Beacon(farm.get()));
+				sensorRepository.save(new Sensor(farm.get()));
 			}
 		}
 		return "cadastro/sensor-user";
@@ -71,7 +71,7 @@ public class SensorController {
 		Optional<Farm> farm = farmRepository.findById(farmId);
 		if (farm.isPresent()) {
 			modelAndView.addObject("farmName", farm.get().getName());
-			List<Beacon> sensores = beaconRepository.findByFarmId(farmId);
+			List<Sensor> sensores = sensorRepository.findByFarmId(farmId);
 		
 			modelAndView.addObject("sensores", sensores);
 		}

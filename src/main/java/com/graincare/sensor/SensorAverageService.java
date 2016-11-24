@@ -1,4 +1,4 @@
-package com.graincare.beacon;
+package com.graincare.sensor;
 
 import java.math.BigDecimal;
 import java.sql.Date;
@@ -7,9 +7,9 @@ import java.util.Calendar;
 import org.springframework.stereotype.Service;
 
 @Service
-public class BeaconAverageService {
+public class SensorAverageService {
 
-	public BeaconAverage getBeaconAverageFor(Object[] result) {
+	public SensorAverage getSensorAverageFor(Object[] result) {
 		Calendar date = Calendar.getInstance();
 		date.setTimeInMillis(((Date) result[0]).getTime());
 
@@ -17,7 +17,7 @@ public class BeaconAverageService {
 		Double averageTemperature = (Double) result[2];
 		Double averageHumidity = (Double) result[3];
 
-		BeaconAverage average = new BeaconAverage(date, quantityOfTemperatures, averageTemperature, averageHumidity);
+		SensorAverage average = new SensorAverage(date, quantityOfTemperatures, averageTemperature, averageHumidity);
 		return average;
 	}
 }

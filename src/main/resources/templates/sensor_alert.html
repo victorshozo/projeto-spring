@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset='UTF-8'></meta>
+</head>
+<body>
+	<h1>ATENÇÃO</h1>
+	<p>Atenção, o silo da região <span style="font-weight:bolder" th:text="${region} + ' '"></span> da fazenda <span style="font-weight:bolder" th:text="${farmName}"></span>
+	,que está com <span style="font-weight:bolder" th:text="${grain}"></span>, está com a temperatura acima do normal. 
+	Sua temperatura atual é <span style="font-weight:bolder; color:#f00;" th:text="${temperature} + ' graus'"></span></p>
+</body>
+</html>

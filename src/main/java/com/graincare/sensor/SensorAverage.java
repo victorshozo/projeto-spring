@@ -1,14 +1,14 @@
-package com.graincare.beacon;
+package com.graincare.sensor;
 
 import java.util.Calendar;
 
-public class BeaconAverage {
+public class SensorAverage {
 	private Calendar date;
 	private int quantity;
 	private Double averageTemperature;
 	private Double averageHumidity;
 
-	public BeaconAverage(Calendar date, int quantity, Double averageTemperature, Double averageHumidity) {
+	public SensorAverage(Calendar date, int quantity, Double averageTemperature, Double averageHumidity) {
 		this.date = date;
 		this.quantity = quantity;
 		this.averageTemperature = averageTemperature;

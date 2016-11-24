@@ -17,18 +17,18 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.graincare.beacon.Beacon;
-import com.graincare.beacon.BeaconAverage;
-import com.graincare.beacon.BeaconAverageService;
-import com.graincare.beacon.BeaconHistory;
-import com.graincare.beacon.BeaconHistoryRepository;
-import com.graincare.beacon.BeaconNotFoundException;
-import com.graincare.beacon.BeaconRepository;
+import com.graincare.exceptions.SensorNotFoundException;
 import com.graincare.exceptions.SiloAlreadyInUseFoundException;
 import com.graincare.exceptions.SiloHistoryNotFoundException;
 import com.graincare.exceptions.SiloNotFoundException;
 import com.graincare.mail.Email;
 import com.graincare.mail.EmailSender;
+import com.graincare.sensor.SensorAverage;
+import com.graincare.sensor.SensorAverageService;
+import com.graincare.sensor.Sensor;
+import com.graincare.sensor.SensorHistory;
+import com.graincare.sensor.SensorHistoryRepository;
+import com.graincare.sensor.SensorRepository;
 import com.graincare.user.LoggedUser;
 import com.graincare.user.User;
 
@@ -40,13 +40,13 @@ public class SiloApiController {
 	@Autowired
 	private SiloRepository siloRepository;
 	@Autowired
-	private BeaconHistoryRepository beaconHistoryRepository;
+	private SensorHistoryRepository sensorHistoryRepository;
 	@Autowired
-	private BeaconRepository beaconRepository;
+	private SensorRepository sensorRepository;
 	@Autowired
 	private SiloPredictionDateCalculator siloPredictionDateCalculator;
 	@Autowired
-	private BeaconAverageService beaconAverageService;
+	private SensorAverageService sensorAverageService;
 	@Autowired
 	private LoggedUser loggedUser;
 	@Autowired
@@ -58,11 +58,6 @@ public class SiloApiController {
 	@Autowired
 	private SiloGraphicGenerator siloGraphicGenerator;
 	
-	@RequestMapping(path = "/silos/history", produces = "application/json", method = RequestMethod.GET)
-	public List<SiloHistory> getSilosHistory() {
-		return siloHistoryRepository.findBySiloFarmUserId(loggedUser.get().getId());
-	}
-
 	@RequestMapping(path = "/silos/history/closed", produces = "application/json", method = RequestMethod.GET)
 	public List<SiloHistory> getClosedSilosHistory() {
 		return siloHistoryRepository.findByOpenFalseAndSiloFarmUserId(loggedUser.get().getId());
@@ -96,21 +91,21 @@ public class SiloApiController {
 		}
 		SiloHistory siloHistory = optionalSiloHistory.get();
 
-		List<BeaconHistory> beaconsHistories = siloHistory.getBeaconsHistory().stream().filter(b -> {
+		List<SensorHistory> sensorsHistories = siloHistory.getSensorsHistory().stream().filter(b -> {
 			return b.getHumidity() == null && b.getTemperature() == null;
 		}).collect(Collectors.toList());
 
-		BeaconHistory beaconHistory = new BeaconHistory();
-		beaconHistory.setUpdatedAt(null);
-		for (BeaconHistory b : beaconsHistories) {
-			if (b.getUpdatedAt().after(beaconHistory.getUpdatedAt()) || beaconHistory.getUpdatedAt() == null) {
-				beaconHistory = b;
+		SensorHistory sensorHistory = new SensorHistory();
+		sensorHistory.setUpdatedAt(null);
+		for (SensorHistory b : sensorsHistories) {
+			if (b.getUpdatedAt().after(sensorHistory.getUpdatedAt()) || sensorHistory.getUpdatedAt() == null) {
+				sensorHistory = b;
 			}
 		}
 
 		Double siloFullPercent = 0.0;
-		if (beaconHistory.getDistance() != null) {
-			siloFullPercent = (beaconHistory.getDistance() * 100.0) / siloHistory.getSilo().getSize();
+		if (sensorHistory.getDistance() != null) {
+			siloFullPercent = (sensorHistory.getDistance() * 100.0) / siloHistory.getSilo().getSize();
 		}
 
 		return siloFullPercent;
@@ -148,9 +143,9 @@ public class SiloApiController {
 			throw new SiloAlreadyInUseFoundException();
 		}
 
-		List<Beacon> beacons = beaconRepository.findByFarmUserIdAndIdIn(userId, dto.getBeaconsId());
-		if (beacons.size() != dto.getBeaconsId().size()) {
-			throw new BeaconNotFoundException();
+		List<Sensor> sensors = sensorRepository.findByFarmUserIdAndIdIn(userId, dto.getSensorsId());
+		if (sensors.size() != dto.getSensorsId().size()) {
+			throw new SensorNotFoundException();
 		}
 
 		SiloHistory siloHistory = new SiloHistory();
@@ -170,10 +165,10 @@ public class SiloApiController {
 		}
 		SiloHistory siloHistory = optionalSiloHistory.get();
 
-		List<BeaconAverage> averages = new ArrayList<>();
-		List<Object[]> results = beaconHistoryRepository.getListOfAverageTemperatureAndHumidityFor(siloHistory.getId());
+		List<SensorAverage> averages = new ArrayList<>();
+		List<Object[]> results = sensorHistoryRepository.getListOfAverageTemperatureAndHumidityFor(siloHistory.getId());
 		results.forEach(result -> {
-			BeaconAverage average = beaconAverageService.getBeaconAverageFor(result);
+			SensorAverage average = sensorAverageService.getSensorAverageFor(result);
 			averages.add(average);
 		});
 
