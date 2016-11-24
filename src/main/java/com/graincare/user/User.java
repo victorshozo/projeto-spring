@@ -1,6 +1,8 @@
 package com.graincare.user;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Arrays.asList;
+import static org.apache.commons.codec.binary.Base64.decodeBase64;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -17,11 +19,11 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
+import org.apache.commons.codec.binary.Base64;
 import org.hibernate.validator.constraints.Email;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import com.graincare.farm.Farm;
 
@@ -61,7 +63,11 @@ public class User implements UserDetails {
 	@PrePersist
 	@PreUpdate
 	void hashPassword() {
-		this.password = password != null ? BCrypt.hashpw(password, BCrypt.gensalt()) : password;
+		this.password = password != null ? Base64.encodeBase64String(password.getBytes()) : password;
+	}
+	
+	public String getDecryptedpassword(){
+		return new String(decodeBase64(password), UTF_8);
 	}
 	
 	public void setId(Long id) {

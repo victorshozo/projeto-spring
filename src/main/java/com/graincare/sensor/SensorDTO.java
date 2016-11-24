@@ -1,4 +1,4 @@
-package com.graincare.beacon;
+package com.graincare.sensor;
 
 public class SensorDTO {
 	private Long farmId;

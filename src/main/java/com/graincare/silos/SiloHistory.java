@@ -18,8 +18,8 @@ import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.graincare.beacon.BeaconHistory;
 import com.graincare.graos.GrainType;
+import com.graincare.sensor.SensorHistory;
 
 @Entity
 @Table(name = "silo_history")
@@ -33,7 +33,7 @@ public class SiloHistory {
 	private GrainType grao;
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "siloHistory", cascade = CascadeType.MERGE)
 	@JsonManagedReference
-	private List<BeaconHistory> beaconsHistory;
+	private List<SensorHistory> sensorsHistory;
 	@Column(name = "opened_at")
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
 	private Calendar openedAt;
@@ -62,12 +62,12 @@ public class SiloHistory {
 		this.grao = grao;
 	}
 
-	public List<BeaconHistory> getBeaconsHistory() {
-		return beaconsHistory;
+	public List<SensorHistory> getSensorsHistory() {
+		return sensorsHistory;
 	}
 
-	public void setBeaconsHistory(List<BeaconHistory> beaconsHistory) {
-		this.beaconsHistory = beaconsHistory;
+	public void setSensorsHistory(List<SensorHistory> sensorsHistory) {
+		this.sensorsHistory = sensorsHistory;
 	}
 
 	public Calendar getOpenedAt() {
