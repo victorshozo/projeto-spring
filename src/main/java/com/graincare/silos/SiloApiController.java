@@ -1,5 +1,6 @@
 package com.graincare.silos;
 
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import java.util.ArrayList;
@@ -225,5 +226,11 @@ public class SiloApiController {
 			throw new SiloInUseException();
 		}
 		siloRepository.delete(siloId);
+	}
+	
+	@RequestMapping(path = "/farm/{farmId}/silos", method = GET)
+	public List<Silo> getsilosOfFarm(@PathVariable Long farmId){
+		List<Silo> silos = siloRepository.findByFarmId(farmId);
+		return silos;
 	}
 }

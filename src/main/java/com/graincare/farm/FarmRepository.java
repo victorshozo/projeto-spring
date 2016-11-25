@@ -1,5 +1,6 @@
 package com.graincare.farm;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.repository.RepositoryDefinition;
@@ -12,4 +13,6 @@ public interface FarmRepository {
 	void save(Farm farm);
 
 	void delete(Farm farm);
+	
+	List<Farm> findByUserId(Long userId);
 }
