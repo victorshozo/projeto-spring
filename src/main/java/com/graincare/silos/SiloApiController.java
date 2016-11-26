@@ -229,8 +229,8 @@ public class SiloApiController {
 	}
 	
 	@RequestMapping(path = "/farm/{farmId}/silos", method = GET)
-	public List<Silo> getsilosOfFarm(@PathVariable Long farmId){
-		List<Silo> silos = siloRepository.findByFarmId(farmId);
+	public List<SiloHistory> getsilosOfFarm(@PathVariable Long farmId){
+		List<SiloHistory> silos = siloHistoryRepository.findByOpenFalseAndSiloFarmId(farmId);
 		return silos;
 	}
 }

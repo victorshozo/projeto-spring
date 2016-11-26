@@ -51,4 +51,6 @@ public interface SiloHistoryRepository {
 			@Param("endDate") Date endDate);
 
 	List<SiloHistory> findBySiloId(Long siloId);
+
+	List<SiloHistory> findByOpenFalseAndSiloFarmId(Long farmId);
 }
