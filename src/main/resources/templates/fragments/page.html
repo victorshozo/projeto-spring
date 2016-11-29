@@ -19,8 +19,7 @@
     <script th:if="${js}" th:src="'/js/' + ${js} + '.js'"></script>
 </head>
 <body>
-<!-- th:if="${header} == true" -->
-    <div th:include="fragments/header :: header(visible=${header})" th:remove="tag"></div>
+    <div th:include="fragments/header :: header(visible=${header}, hideLogin=${hideLogin})" th:remove="tag"></div>
     <div layout:fragment="content" class="page"></div>
 </body>
 </html>

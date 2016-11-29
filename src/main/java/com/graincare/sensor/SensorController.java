@@ -1,3 +1,4 @@
+
 package com.graincare.sensor;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -53,7 +54,7 @@ public class SensorController {
 	}
 
 	@RequestMapping(path = "/sensores", method = POST)
-	public String newSilo(@ModelAttribute SensorDTO dto) {
+	public String newSensor(@ModelAttribute SensorDTO dto) {
 		Optional<Farm> farm = farmRepository.findById(dto.getFarmId());
 		if (farm.isPresent()) {
 			for (int i = 0; i < dto.getQuantity(); i++) {

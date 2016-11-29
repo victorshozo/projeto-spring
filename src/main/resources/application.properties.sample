@@ -20,3 +20,5 @@ spring.mvc.view.prefix=/templates/
 spring.mvc.view.suffix=.html
 spring.thymeleaf.cache=false
 spring.thymeleaf.mode=LEGACYHTML5
+
+server.url=http://localhost:8080/

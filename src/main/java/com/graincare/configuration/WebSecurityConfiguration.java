@@ -38,6 +38,8 @@ class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         	.csrf().disable()
             .authorizeRequests()
                 .antMatchers("/register").permitAll()
+                .antMatchers("/trocar-senha").permitAll()
+                .antMatchers("/user/*/password").permitAll()
                 .antMatchers("/sensor/history").permitAll()
                 .antMatchers("/user/password/reset").permitAll()
                 .antMatchers("/assets/**").permitAll()
@@ -76,6 +78,7 @@ class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 	}
 
 	@Bean
+	@SuppressWarnings("deprecation")
 	PasswordEncoder getPasswordEncoder() {
 		return new PasswordEncoder() {
 			@Override
