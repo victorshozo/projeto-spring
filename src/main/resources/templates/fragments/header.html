@@ -29,7 +29,7 @@
                     <li sec:authorize="isAuthenticated()"><a href="/usuarios">Lista de Usuários</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right" >
-                    <li class="active" sec:authorize="!isAuthenticated()" th:classappend="${hideLogin} ? hide-alert : a"><a href="/login">Login <span class="sr-only">(current)</span></a></li>
+                    <li class="active" sec:authorize="!isAuthenticated()" th:classappend="${hideLogin} ? hide-login : a"><a href="/login">Login <span class="sr-only">(current)</span></a></li>
                     <li class="active" sec:authorize="isAuthenticated()" id="logout-btn"><a href="#">Sair <span class="sr-only">(current)</span></a></li>
                 </ul>
             </div>

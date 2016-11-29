@@ -5,5 +5,9 @@
 }
 
 .hide-alert {
+	display: none;
+}
+
+.hide-login {
 	display: none !important;
 }
