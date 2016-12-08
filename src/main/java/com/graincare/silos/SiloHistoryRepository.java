@@ -19,23 +19,23 @@ public interface SiloHistoryRepository {
 
 	SiloHistory save(SiloHistory siloHistory);
 	
-	@Query(value = "select s.id as siloId,  "
-			+ " date(s.closed_at) closedAt,  " 
-			+ " date(s.opened_at) openAt, " 
-			+ " s.grao grain, "
-			+ " sum(b.temperature) / sum(1) as averageTemperature, " 
-			+ " sum(b.humidity) / sum(1) as averageHumidity, "
-			+ " (((select max(sh.distance) from sensor_history sh  "
-			+ " 	where sh.silo_history_id = s.id and sh.humidity is null and sh.temperature is null "
-			+ "		group by sh.silo_history_id) * 100) / (select sl.size from silo sl where sl.id = s.id)) capacity "
-			+ " from silo_history s " 
-			+ " inner join sensor_history b on b.silo_history_id = s.id "
-			+ " and b.humidity is not null " 
-			+ " and b.temperature is not null " 
-			+ "where s.open = true "
-			+ " and date(s.closed_at) between date(:starDate) and date(:endDate) " 
-			+ " and s.silo_id = :siloId "
-			+ " group by s.id ", nativeQuery = true)
+	@Query(value = "select s.silo_id as siloId, " 
+			 + " date(s.closed_at) closedAt, "  
+			 + " date(s.opened_at) openAt, " 
+			 + " s.grao grain, "
+			 + " sum(b.temperature) / sum(1) as averageTemperature, " 
+			 + " sum(b.humidity) / sum(1) as averageHumidity, "
+			 + " (((select ifnull(max(sh.distance),0) from sensor_history sh " 
+			 + " 	where sh.silo_history_id = s.id  "
+			 + " 	group by sh.silo_history_id) * 100) / (select sl.size from silo sl where sl.id = s.silo_id)) capacity "
+			 + " from silo_history s  "
+			 + " inner join sensor_history b on b.silo_history_id = s.id "
+			 + " 	and b.humidity is not null  "
+			 + " 	and b.temperature is not null "
+			 + " where s.open = true "
+			 + " 	and date(s.closed_at) between date(:starDate) and date(:endDate) " 
+			 + " 	and s.silo_id = :siloId "
+			 + " group by s.id ", nativeQuery = true)
 	List<Object[]> generateReportFor(@Param("siloId") Long siloId,  @Param("starDate") Date startDate,
 			@Param("endDate") Date endDate);
 	
@@ -45,6 +45,8 @@ public interface SiloHistoryRepository {
 			+ " inner join silo_history s on s.id = b.silo_history_id "
 			+ " where date(s.closed_at) between date(:starDate) and date(:endDate) "
 			+ " and b.distance is null "
+			+ " and b.humidity is not null "
+			+ " and b.temperature is not null "
 			+ "	and s.silo_id = :siloId "
 			+ " group by date(b.updated_at);", nativeQuery = true)
 	List<Object[]> generateGraphicFor(@Param("siloId") Long siloId, @Param("starDate") Date startDate, 
@@ -53,4 +55,6 @@ public interface SiloHistoryRepository {
 	List<SiloHistory> findBySiloId(Long siloId);
 
 	List<SiloHistory> findByOpenFalseAndSiloFarmId(Long farmId);
+
+	List<SiloHistory> findBySiloIdAndOpenFalse(Long siloId);
 }

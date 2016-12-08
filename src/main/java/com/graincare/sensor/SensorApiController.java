@@ -1,6 +1,5 @@
 package com.graincare.sensor;
 
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import java.util.ArrayList;

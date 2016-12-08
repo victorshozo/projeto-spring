@@ -96,7 +96,7 @@ public class SiloApiController {
 		SiloHistory siloHistory = optionalSiloHistory.get();
 
 		List<SensorHistory> sensorsHistories = siloHistory.getSensorsHistory().stream().filter(b -> {
-			return b.getHumidity() == null && b.getTemperature() == null;
+			return b.getDistance() != null;
 		}).collect(Collectors.toList());
 
 		SensorHistory sensorHistory = new SensorHistory();
@@ -158,6 +158,13 @@ public class SiloApiController {
 		siloHistory.setOpen(false);
 		siloHistory.setSilo(optionalSilo.get());
 		siloHistoryRepository.save(siloHistory);
+		
+		sensors.forEach(sensor -> {
+			SensorHistory sensorHistory = new SensorHistory();
+			sensorHistory.setSiloHistory(siloHistory);
+			sensorHistory.setSensor(sensor);
+			sensorHistoryRepository.save(sensorHistory);
+		});
 	}
 
 	@RequestMapping(path = "/silo/{siloId}/prediction", method = RequestMethod.GET)
@@ -221,8 +228,8 @@ public class SiloApiController {
 	
 	@RequestMapping(path = "/silos/{siloId}/delete", method = POST)
 	public void deleteSensor(@PathVariable("siloId") Long siloId){
-		List<SiloHistory> silo = siloHistoryRepository.findBySiloFarmUserId(siloId);
-		if(silo.size() >= 1){
+		List<SiloHistory> silos = siloHistoryRepository.findBySiloIdAndOpenFalse(siloId);
+		if(silos.size() >= 1){
 			throw new SiloInUseException();
 		}
 		siloRepository.delete(siloId);

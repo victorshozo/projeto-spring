@@ -24,7 +24,8 @@ $(document).ready(function(){
 			$('#user-form').trigger("reset");
 			successAlert("Usuário cadastrado com sucesso!");
 		}).fail(function(e){
-			errorAlert('Preencha dados válidos');
+			JSON.parse(e.responseText).message;
+			errorAlert(JSON.parse(e.responseText).message);
 		});
 	});
 	

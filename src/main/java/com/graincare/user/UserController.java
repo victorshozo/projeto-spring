@@ -20,7 +20,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.thymeleaf.util.StringUtils;
 
+import com.graincare.exceptions.InvalidFarmNameException;
+import com.graincare.exceptions.InvalidDataException;
 import com.graincare.exceptions.PasswordsDontMatchException;
+import com.graincare.exceptions.UserAlreadyRegisteredException;
 import com.graincare.exceptions.UserNotfoundException;
 import com.graincare.farm.Farm;
 
@@ -43,10 +46,24 @@ public class UserController {
 	@Secured("ROLE_ADMIN")
 	@RequestMapping(path = "/users", method = POST)
 	public String newUser(@ModelAttribute UserDTO dto) {
+		if(dto.getFarmNames() == null) {
+			throw new InvalidDataException();
+		}
+		if(StringUtils.isEmpty(dto.getPassword()) || StringUtils.isEmpty(dto.getEmail()) 
+				|| dto.getFarmNames().size() == 0) {
+			throw new InvalidDataException();
+		}
+		if(userRepository.findByEmail(dto.getEmail()).isPresent()){
+			throw new UserAlreadyRegisteredException();
+		}	
+		
 		List<Farm> farms = new ArrayList<>();
 		User user = new User(dto.getEmail(), dto.getPassword());
 
 		dto.getFarmNames().forEach(name -> {
+			if(StringUtils.isEmpty(name)) {
+				throw new InvalidFarmNameException();
+			}
 			farms.add(new Farm(name, user));
 		});
 		user.setFarms(farms);
